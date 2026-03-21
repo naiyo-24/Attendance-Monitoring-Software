@@ -120,11 +120,27 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                   ),
                   const SizedBox(height: 18),
                   TextField(
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.search),
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.search, color: kBrown),
                       hintText: 'Search by name or phone no.',
-                      border: OutlineInputBorder(),
+                      hintStyle: kTaglineTextStyle(context).copyWith(color: kBrown.withOpacity(0.7)),
+                      filled: true,
+                      fillColor: kWhiteGrey,
+                      contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 18),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(32),
+                        borderSide: BorderSide.none,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(32),
+                        borderSide: BorderSide.none,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(32),
+                        borderSide: const BorderSide(color: kGreen, width: 2),
+                      ),
                     ),
+                    style: kDescriptionTextStyle(context).copyWith(fontSize: 16),
                     onChanged: (val) => setState(() => searchQuery = val),
                   ),
                   const SizedBox(height: 24),
