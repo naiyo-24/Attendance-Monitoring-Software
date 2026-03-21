@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../theme/app_theme.dart';
@@ -10,11 +11,26 @@ class LoginScreen extends ConsumerStatefulWidget {
   @override
   ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
-
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  String _email = '';
-  String _password = '';
+  String email = '';
+  String password = '';
+
+  void _onLogin(BuildContext context, WidgetRef ref) async {
+    final _ = ref.read(authProvider);
+    if (_formKey.currentState?.validate() ?? false) {
+      // Simulate login success (replace with real logic)
+      // await auth.login(email, password);
+      // if (auth.isLoggedIn) {
+      // Use GoRouter for navigation
+      // ignore: use_build_context_synchronously
+      // context.go('/dashboard');
+      // For pushReplacement, use context.go
+      // ignore: use_build_context_synchronously
+      context.go('/dashboard');
+      // }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +97,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           labelText: 'Email',
                         ),
                         keyboardType: TextInputType.emailAddress,
-                        onChanged: (val) => _email = val,
+                        onChanged: (val) => email = val,
                         validator: (val) => val == null || val.isEmpty ? 'Enter your email' : null,
                       ),
                       const SizedBox(height: 20),
@@ -91,7 +107,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           labelText: 'Password',
                         ),
                         obscureText: true,
-                        onChanged: (val) => _password = val,
+                        onChanged: (val) => password = val,
                         validator: (val) => val == null || val.isEmpty ? 'Enter your password' : null,
                       ),
                       const SizedBox(height: 12),
@@ -100,7 +116,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         child: TextButton(
                           onPressed: () {},
                           child: Text(
-                            'Forgot password?',
+                            'Forgot Password?',
                             style: TextStyle(color: kerror),
                           ),
                         ),
@@ -110,20 +126,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         width: double.infinity,
                         child: ElevatedButton(
                           style: kPremiumButtonStyle(context),
-                          onPressed: auth.isLoading
-                              ? null
-                              : () {
-                                  if (_formKey.currentState!.validate()) {
-                                    ref.read(authProvider).login(_email, _password);
-                                  }
-                                },
+                          onPressed: auth.isLoading ? null : () => _onLogin(context, ref),
                           child: auth.isLoading
-                              ? const SizedBox(
-                                  width: 24,
-                                  height: 24,
-                                  child: CircularProgressIndicator(strokeWidth: 2, color: kWhite),
-                                )
-                              : const Text('Sign In'),
+                              ? const CircularProgressIndicator(color: kWhite)
+                              : const Text('Login'),
                         ),
                       ),
                       if (auth.error != null)
@@ -131,7 +137,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           padding: const EdgeInsets.only(top: 12.0),
                           child: Text(
                             auth.error!,
-                            style: TextStyle(color: kerror, fontSize: 14),
+                            style: TextStyle(color: kerror),
                           ),
                         ),
                     ],

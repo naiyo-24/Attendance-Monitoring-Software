@@ -2,14 +2,18 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 
 
+
 class PremiumAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final String subtitle;
+  final GlobalKey<ScaffoldState>? scaffoldKey;
   const PremiumAppBar({
     required this.title,
     required this.subtitle,
+    this.scaffoldKey,
     super.key,
   });
+
 
 
   @override
@@ -21,6 +25,14 @@ class PremiumAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: kWhite,
       elevation: 0,
+      leading: Builder(
+        builder: (context) => IconButton(
+          icon: const Icon(Icons.menu, color: kBlack),
+          onPressed: () {
+            Scaffold.of(context).openDrawer();
+          },
+        ),
+      ),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
