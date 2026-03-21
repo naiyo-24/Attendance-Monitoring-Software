@@ -61,7 +61,7 @@ class CountCards extends StatelessWidget {
 				borderRadius: BorderRadius.circular(20),
 				boxShadow: [
 					BoxShadow(
-						color: iconColor.withOpacity(0.08),
+						color: iconColor.withAlpha((0.08 * 255).toInt()),
 						blurRadius: 16,
 						offset: const Offset(0, 8),
 					),
@@ -80,7 +80,7 @@ class CountCards extends StatelessWidget {
 							children: [
 								Container(
 									decoration: BoxDecoration(
-										color: iconColor.withOpacity(0.12),
+										color: iconColor.withAlpha((0.12 * 255).toInt()),
 										shape: BoxShape.circle,
 									),
 									padding: const EdgeInsets.all(7),

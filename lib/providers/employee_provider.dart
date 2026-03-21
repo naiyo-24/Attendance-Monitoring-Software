@@ -4,9 +4,9 @@ import '../notifiers/employee_notifier.dart';
 class EmployeeProvider extends InheritedNotifier<EmployeeNotifier> {
   const EmployeeProvider({
     super.key,
-    required EmployeeNotifier notifier,
-    required Widget child,
-  }) : super(notifier: notifier, child: child);
+    required EmployeeNotifier super.notifier,
+    required super.child,
+  });
 
   static EmployeeNotifier of(BuildContext context) {
     final EmployeeProvider? provider = context.dependOnInheritedWidgetOfExactType<EmployeeProvider>();

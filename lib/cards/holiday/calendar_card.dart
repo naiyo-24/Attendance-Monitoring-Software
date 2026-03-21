@@ -21,7 +21,7 @@ class CalendarCard extends StatelessWidget {
       color: kWhiteGrey,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 4),
-        child: Container(
+        child: SizedBox(
           width: 700, // Fixed width to ensure constraints for TableCalendar header
           child: TableCalendar(
             firstDay: DateTime(focusedDay.year - 1, 1, 1),
@@ -47,7 +47,7 @@ class CalendarCard extends StatelessWidget {
             ),
             calendarStyle: CalendarStyle(
               todayDecoration: BoxDecoration(
-                color: kGreen.withOpacity(0.2),
+                color: kGreen.withAlpha((0.2 * 255).toInt()),
                 shape: BoxShape.circle,
               ),
               selectedDecoration: BoxDecoration(

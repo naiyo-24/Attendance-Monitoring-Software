@@ -23,7 +23,7 @@ class LeaveRequestCard extends StatelessWidget {
 						Row(
 							children: [
 								CircleAvatar(
-									backgroundColor: kGreen.withOpacity(0.15),
+									  backgroundColor: kGreen.withAlpha((0.15 * 255).toInt()),
 									child: Text(leave.employee.name[0], style: kHeaderTextStyle(context).copyWith(fontSize: 18)),
 								),
 								const SizedBox(width: 12),
@@ -61,13 +61,13 @@ class LeaveRequestCard extends StatelessWidget {
 								children: [
 									ElevatedButton(
 										onPressed: onApprove,
-										style: kPremiumButtonStyle(context).copyWith(backgroundColor: MaterialStateProperty.all(kGreen)),
+										style: kPremiumButtonStyle(context).copyWith(backgroundColor: WidgetStateProperty.all(kGreen)),
 										child: const Text('Approve'),
 									),
 									const SizedBox(width: 10),
 									ElevatedButton(
 										onPressed: onReject,
-										style: kPremiumButtonStyle(context).copyWith(backgroundColor: MaterialStateProperty.all(kPink)),
+										style: kPremiumButtonStyle(context).copyWith(backgroundColor: WidgetStateProperty.all(kPink)),
 										child: const Text('Reject'),
 									),
 								],

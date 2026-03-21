@@ -28,7 +28,7 @@ class EmployeeCard extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 28,
-                  backgroundColor: kBrown.withOpacity(0.1),
+                  backgroundColor: kBrown.withAlpha((0.1 * 255).toInt()),
                   backgroundImage: employee['profilePhoto'] != null ? NetworkImage(employee['profilePhoto']) : null,
                   child: employee['profilePhoto'] == null
                       ? const Icon(Iconsax.user, color: kBrown, size: 32)

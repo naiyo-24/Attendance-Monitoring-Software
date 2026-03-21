@@ -123,7 +123,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.search, color: kBrown),
                       hintText: 'Search by name or phone no.',
-                      hintStyle: kTaglineTextStyle(context).copyWith(color: kBrown.withOpacity(0.7)),
+                      hintStyle: kTaglineTextStyle(context).copyWith(color: kBrown.withAlpha((0.7 * 255).toInt())),
                       filled: true,
                       fillColor: kWhiteGrey,
                       contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 18),
@@ -147,7 +147,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                   Expanded(
                     child: ListView.separated(
                       itemCount: filteredEmployees.length,
-                      separatorBuilder: (_, __) => const SizedBox(height: 16),
+                      separatorBuilder: (_, _) => const SizedBox(height: 16),
                       itemBuilder: (context, index) => EmployeeCard(
                         employee: {
                           'name': filteredEmployees[index].name,

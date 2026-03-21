@@ -22,7 +22,7 @@ class AttendanceGraphCard extends StatelessWidget {
 				),
 				boxShadow: [
 					BoxShadow(
-						color: kGreen.withOpacity(0.08),
+						color: kGreen.withAlpha((0.08 * 255).toInt()),
 						blurRadius: 24,
 						offset: const Offset(0, 12),
 					),
@@ -37,7 +37,7 @@ class AttendanceGraphCard extends StatelessWidget {
 							children: [
 								Container(
 									decoration: BoxDecoration(
-										color: kGreen.withOpacity(0.12),
+										color: kGreen.withAlpha((0.12 * 255).toInt()),
 										shape: BoxShape.circle,
 									),
 									padding: const EdgeInsets.all(10),
@@ -87,7 +87,7 @@ class AttendanceGraphCard extends StatelessWidget {
 											color: kGreen,
 											barWidth: 4,
 											dotData: FlDotData(show: true, getDotPainter: (spot, percent, bar, index) => FlDotCirclePainter(radius: 4, color: kGreen, strokeWidth: 0)),
-											belowBarData: BarAreaData(show: true, color: kGreen.withOpacity(0.08)),
+											belowBarData: BarAreaData(show: true, color: kGreen.withAlpha((0.08 * 255).toInt())),
 										),
 										LineChartBarData(
 											spots: List.generate(graph.absent.length, (i) => FlSpot(i.toDouble(), graph.absent[i].toDouble())),
@@ -95,7 +95,7 @@ class AttendanceGraphCard extends StatelessWidget {
 											color: kPink,
 											barWidth: 4,
 											dotData: FlDotData(show: true, getDotPainter: (spot, percent, bar, index) => FlDotCirclePainter(radius: 4, color: kPink, strokeWidth: 0)),
-											belowBarData: BarAreaData(show: true, color: kPink.withOpacity(0.08)),
+											belowBarData: BarAreaData(show: true, color: kPink.withAlpha((0.08 * 255).toInt())),
 										),
 									],
 									lineTouchData: LineTouchData(
@@ -141,7 +141,7 @@ class AttendanceGraphCard extends StatelessWidget {
 					width: 18,
 					height: 18,
 					decoration: BoxDecoration(
-						color: color.withOpacity(0.15),
+						color: color.withAlpha((0.15 * 255).toInt()),
 						shape: BoxShape.circle,
 					),
 					child: Icon(icon, color: color, size: 14),

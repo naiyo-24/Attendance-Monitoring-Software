@@ -25,7 +25,7 @@ class SalarySlipCard extends StatelessWidget {
 						Row(
 							children: [
 								CircleAvatar(
-									backgroundColor: kGreen.withOpacity(0.15),
+									  backgroundColor: kGreen.withAlpha((0.15 * 255).toInt()),
 									child: Text(emp.name[0], style: kHeaderTextStyle(context).copyWith(fontSize: 18)),
 								),
 								const SizedBox(width: 12),

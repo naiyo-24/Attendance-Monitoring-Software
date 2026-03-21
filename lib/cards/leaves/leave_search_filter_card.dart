@@ -59,7 +59,7 @@ class _LeaveSearchFilterCardState extends State<LeaveSearchFilterCard> {
 						),
 						const SizedBox(height: 10),
 						DropdownButtonFormField<Employee>(
-							value: _selectedEmployee != null && employees.contains(_selectedEmployee)
+							initialValue: _selectedEmployee != null && employees.contains(_selectedEmployee)
 									? _selectedEmployee
 									: null,
 							items: [

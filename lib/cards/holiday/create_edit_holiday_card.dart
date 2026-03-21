@@ -66,11 +66,11 @@ class _CreateEditHolidayCardState extends State<CreateEditHolidayCard> {
               decoration: BoxDecoration(
                 color: kWhiteGrey,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: kBrown.withOpacity(0.2)),
+                border: Border.all(color: kBrown.withAlpha((0.2 * 255).toInt())),
               ),
               child: Row(
                 children: [
-                  Icon(Icons.calendar_today, color: kBrown.withOpacity(0.7)),
+                  Icon(Icons.calendar_today, color: kBrown.withAlpha((0.7 * 255).toInt())),
                   const SizedBox(width: 12),
                   Text(
                     _selectedDate != null
