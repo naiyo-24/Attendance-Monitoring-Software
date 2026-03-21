@@ -3,6 +3,7 @@ import '../screens/auth/splash_screen.dart';
 import '../screens/auth/login_screen.dart';
 import '../screens/dashboard/dashboard_screen.dart';
 import '../screens/location_matrix/location_matrix_screen.dart';
+import '../screens/employee/employee_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/splash',
@@ -22,6 +23,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/set-location-matrix',
       builder: (context, state) => const LocationMatrixScreen(),
+    ),
+    GoRoute(
+      path: '/onboard-employees',
+      builder: (context, state) => const EmployeeScreen(),
     ),
   ],
 );
