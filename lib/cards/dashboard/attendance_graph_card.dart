@@ -1,5 +1,7 @@
-import 'package:flutter/material.dart';
+
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 import '../../models/attendance_graph.dart';
 import '../../theme/app_theme.dart';
 
@@ -9,23 +11,48 @@ class AttendanceGraphCard extends StatelessWidget {
 
 	@override
 	Widget build(BuildContext context) {
-		return Card(
-			color: kWhiteGrey,
-			margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-			shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-			elevation: 2,
+		return Container(
+			margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+			decoration: BoxDecoration(
+				borderRadius: BorderRadius.circular(28),
+				gradient: const LinearGradient(
+					colors: [kWhite, kWhiteGrey],
+					begin: Alignment.topLeft,
+					end: Alignment.bottomRight,
+				),
+				boxShadow: [
+					BoxShadow(
+						color: kGreen.withOpacity(0.08),
+						blurRadius: 24,
+						offset: const Offset(0, 12),
+					),
+				],
+			),
 			child: Padding(
-				padding: const EdgeInsets.all(16.0),
+				padding: const EdgeInsets.all(22.0),
 				child: Column(
 					crossAxisAlignment: CrossAxisAlignment.start,
 					children: [
-						Text('Attendance Overview', style: kHeaderTextStyle(context).copyWith(fontSize: 20)),
-						const SizedBox(height: 12),
+						Row(
+							children: [
+								Container(
+									decoration: BoxDecoration(
+										color: kGreen.withOpacity(0.12),
+										shape: BoxShape.circle,
+									),
+									padding: const EdgeInsets.all(10),
+									child: const Icon(Iconsax.chart, color: kGreen, size: 28),
+								),
+								const SizedBox(width: 12),
+								Text('Attendance Overview', style: kHeaderTextStyle(context).copyWith(fontSize: 22)),
+							],
+						),
+						const SizedBox(height: 18),
 						SizedBox(
-							height: 220,
+							height: 300,
 							child: LineChart(
 								LineChartData(
-									gridData: FlGridData(show: true),
+									gridData: FlGridData(show: true, drawVerticalLine: false, horizontalInterval: 5, getDrawingHorizontalLine: (value) => FlLine(color: kWhiteGrey, strokeWidth: 1)),
 									titlesData: FlTitlesData(
 										leftTitles: AxisTitles(
 											sideTitles: SideTitles(showTitles: true, reservedSize: 32),
@@ -36,7 +63,10 @@ class AttendanceGraphCard extends StatelessWidget {
 												getTitlesWidget: (value, meta) {
 													int idx = value.toInt();
 													if (idx < 0 || idx >= graph.months.length) return const SizedBox();
-													return Text(graph.months[idx], style: kCaptionTextStyle(context));
+													return Padding(
+														padding: const EdgeInsets.only(top: 6.0),
+														child: Text(graph.months[idx], style: kCaptionTextStyle(context)),
+													);
 												},
 												interval: 1,
 												reservedSize: 32,
@@ -45,7 +75,7 @@ class AttendanceGraphCard extends StatelessWidget {
 										rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
 										topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
 									),
-									borderData: FlBorderData(show: true, border: Border.all(color: kBrown, width: 1)),
+									borderData: FlBorderData(show: false),
 									minX: 0,
 									maxX: (graph.months.length - 1).toDouble(),
 									minY: 0,
@@ -55,33 +85,47 @@ class AttendanceGraphCard extends StatelessWidget {
 											spots: List.generate(graph.present.length, (i) => FlSpot(i.toDouble(), graph.present[i].toDouble())),
 											isCurved: true,
 											color: kGreen,
-											barWidth: 3,
-											dotData: FlDotData(show: false),
-											belowBarData: BarAreaData(show: false),
+											barWidth: 4,
+											dotData: FlDotData(show: true, getDotPainter: (spot, percent, bar, index) => FlDotCirclePainter(radius: 4, color: kGreen, strokeWidth: 0)),
+											belowBarData: BarAreaData(show: true, color: kGreen.withOpacity(0.08)),
 										),
 										LineChartBarData(
 											spots: List.generate(graph.absent.length, (i) => FlSpot(i.toDouble(), graph.absent[i].toDouble())),
 											isCurved: true,
 											color: kPink,
-											barWidth: 3,
-											dotData: FlDotData(show: false),
-											belowBarData: BarAreaData(show: false),
+											barWidth: 4,
+											dotData: FlDotData(show: true, getDotPainter: (spot, percent, bar, index) => FlDotCirclePainter(radius: 4, color: kPink, strokeWidth: 0)),
+											belowBarData: BarAreaData(show: true, color: kPink.withOpacity(0.08)),
 										),
 									],
-									lineTouchData: LineTouchData(enabled: true),
+									lineTouchData: LineTouchData(
+										enabled: true,
+										touchTooltipData: LineTouchTooltipData(
+											getTooltipColor: (bar) => kWhite,
+											getTooltipItems: (touchedSpots) => touchedSpots.map((spot) {
+												final isPresent = spot.barIndex == 0;
+												return LineTooltipItem(
+													isPresent ? 'Present: ' : 'Absent: ',
+													kCaptionTextStyle(context).copyWith(fontWeight: FontWeight.bold, color: isPresent ? kGreen : kPink),
+													children: [
+														TextSpan(
+															text: spot.y.toInt().toString(),
+															style: kHeaderTextStyle(context).copyWith(fontSize: 16, color: isPresent ? kGreen : kPink),
+														),
+													],
+												);
+											}).toList(),
+										),
+									),
 								),
 							),
 						),
-						const SizedBox(height: 8),
+						const SizedBox(height: 16),
 						Row(
 							children: [
-								_legendDot(kGreen),
-								const SizedBox(width: 4),
-								Text('Present', style: kCaptionTextStyle(context)),
-								const SizedBox(width: 16),
-								_legendDot(kPink),
-								const SizedBox(width: 4),
-								Text('Absent', style: kCaptionTextStyle(context)),
+								_legendDot(kGreen, Iconsax.user_tick, 'Present', context),
+								const SizedBox(width: 18),
+								_legendDot(kPink, Iconsax.user_remove, 'Absent', context),
 							],
 						),
 					],
@@ -90,14 +134,21 @@ class AttendanceGraphCard extends StatelessWidget {
 		);
 	}
 
-	Widget _legendDot(Color color) {
-		return Container(
-			width: 12,
-			height: 12,
-			decoration: BoxDecoration(
-				color: color,
-				shape: BoxShape.circle,
-			),
+	Widget _legendDot(Color color, IconData icon, String label, BuildContext context) {
+		return Row(
+			children: [
+				Container(
+					width: 18,
+					height: 18,
+					decoration: BoxDecoration(
+						color: color.withOpacity(0.15),
+						shape: BoxShape.circle,
+					),
+					child: Icon(icon, color: color, size: 14),
+				),
+				const SizedBox(width: 6),
+				Text(label, style: kCaptionTextStyle(context)),
+			],
 		);
 	}
 }

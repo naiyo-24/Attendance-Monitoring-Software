@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';
 import '../../widgets/side_nav_bar.dart';
 import '../../cards/dashboard/count_cards.dart';
@@ -27,23 +28,33 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   Widget build(BuildContext context) {
     final dashboard = ref.watch(dashboardProvider);
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: kWhiteGrey,
       drawer: const SideNavBar(),
       appBar: const PremiumAppBar(
         title: 'Dashboard',
         subtitle: 'Overview',
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const SizedBox(height: 16),
-            CountCards(count: dashboard.count),
-            AttendanceGraphCard(graph: dashboard.attendanceGraph),
-            const SizedBox(height: 16),
-            const HomeFooter(),
-            const SizedBox(height: 16),
-          ],
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 350),
+        child: SingleChildScrollView(
+          key: ValueKey(dashboard.count.employees + dashboard.count.holidays + dashboard.count.pendingLeaves),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: CountCards(count: dashboard.count),
+                ),
+                AttendanceGraphCard(graph: dashboard.attendanceGraph),
+                const SizedBox(height: 24),
+                const HomeFooter(),
+                const SizedBox(height: 24),
+              ],
+            ),
+          ),
         ),
       ),
     );
