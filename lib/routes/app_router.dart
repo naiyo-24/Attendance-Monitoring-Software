@@ -4,7 +4,9 @@ import '../screens/auth/login_screen.dart';
 import '../screens/dashboard/dashboard_screen.dart';
 import '../screens/location_matrix/location_matrix_screen.dart';
 import '../screens/employee/employee_screen.dart';
+
 import '../screens/holiday/holiday_screen.dart';
+import '../screens/leaves/leave_application_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/splash',
@@ -32,6 +34,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/holiday-list',
       builder: (context, state) => const HolidayScreen(),
+    ),
+    GoRoute(
+      path: '/leave-applications',
+      builder: (context, state) => const LeaveApplicationScreen(),
     ),
   ],
 );
