@@ -1,3 +1,4 @@
+import '../screens/help_center/help_center_screen.dart';
 import '../screens/notification/notification_screen.dart';
 import '../screens/salary_slip/salary_slip_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -48,6 +49,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/notification-management',
       builder: (context, state) => const NotificationScreen(),
+    ),
+    GoRoute(
+      path: '/help-center',
+      builder: (context, state) => const HelpCenterScreen(),
     ),
   ],
 );
