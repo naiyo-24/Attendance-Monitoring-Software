@@ -8,6 +8,8 @@ import '../../providers/employee_provider.dart';
 import '../../models/salary_slip.dart';
 import 'package:file_picker/file_picker.dart';
 
+import '../../widgets/side_nav_bar.dart';
+
 class SalarySlipScreen extends StatefulWidget {
 	const SalarySlipScreen({super.key});
 
@@ -65,6 +67,7 @@ class _SalarySlipScreenState extends State<SalarySlipScreen> {
 						title: 'Salary Slips',
 						subtitle: 'Manage employee salary slips',
 					),
+          drawer: const SideNavBar(),
 					body: Padding(
 						padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
 						child: ListView.builder(
