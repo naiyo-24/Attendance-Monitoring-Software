@@ -9,6 +9,7 @@ import '../../providers/employee_provider.dart';
 import '../../models/leaves.dart';
 import '../../models/employee.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/side_nav_bar.dart';
 
 class LeaveApplicationScreen extends StatefulWidget {
 	const LeaveApplicationScreen({super.key});
@@ -64,6 +65,7 @@ class _LeaveApplicationScreenState extends State<LeaveApplicationScreen> {
 						title: 'Leave Applications',
 						subtitle: 'Manage employee leave requests',
 					),
+          drawer: const SideNavBar(),
 					body: Padding(
 						padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
 						child: Column(
