@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../notifiers/employee_notifier.dart';
 import '../../models/employee.dart';
+import '../../providers/employee_provider.dart';
 import '../../theme/app_theme.dart';
 
 class LeaveSearchFilterCard extends StatefulWidget {
@@ -18,7 +18,9 @@ class _LeaveSearchFilterCardState extends State<LeaveSearchFilterCard> {
 
 	@override
 	Widget build(BuildContext context) {
-		final employees = EmployeeNotifier().employees;
+		// Use EmployeeNotifier from provider context
+		final employeeNotifier = EmployeeProvider.of(context);
+		final employees = employeeNotifier.employees;
 		return Card(
 			shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
 			color: kWhite,
@@ -57,7 +59,9 @@ class _LeaveSearchFilterCardState extends State<LeaveSearchFilterCard> {
 						),
 						const SizedBox(height: 10),
 						DropdownButtonFormField<Employee>(
-							value: _selectedEmployee,
+							value: _selectedEmployee != null && employees.contains(_selectedEmployee)
+									? _selectedEmployee
+									: null,
 							items: [
 								const DropdownMenuItem<Employee>(
 									value: null,
