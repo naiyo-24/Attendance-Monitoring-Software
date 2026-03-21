@@ -1,3 +1,4 @@
+import '../screens/salary_slip/salary_slip_screen.dart';
 import 'package:go_router/go_router.dart';
 import '../screens/auth/splash_screen.dart';
 import '../screens/auth/login_screen.dart';
@@ -38,6 +39,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/leave-applications',
       builder: (context, state) => const LeaveApplicationScreen(),
+    ),
+    GoRoute(
+      path: '/salary-slip',
+      builder: (context, state) => const SalarySlipScreen(),
     ),
   ],
 );
