@@ -48,7 +48,11 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
 	@override
 	Widget build(BuildContext context) {
 		final auth = ref.watch(authProvider);
-		adminId = auth.user?.adminId;
+		final currentAdminId = auth.user?.adminId;
+		if (currentAdminId != null && (adminId != currentAdminId || notificationNotifier.notifications.isEmpty)) {
+			adminId = currentAdminId;
+			notificationNotifier.fetchNotifications(adminId!);
+		}
 		return NotificationProvider(
 			notifier: notificationNotifier,
 			child: Scaffold(
