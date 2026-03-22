@@ -63,7 +63,8 @@ class _LocationMatrixScreenState extends ConsumerState<LocationMatrixScreen> {
                   ),
                 );
               }
-              Navigator.pop(context);
+              if (!context.mounted) return;
+              Navigator.of(context).pop();
             },
           ),
         ),
@@ -109,7 +110,7 @@ class _LocationMatrixScreenState extends ConsumerState<LocationMatrixScreen> {
                   ? const Center(child: CircularProgressIndicator())
                   : ListView.separated(
                       itemCount: matrixNotifier.matrices.length,
-                      separatorBuilder: (_, __) => const SizedBox(height: 16),
+                      separatorBuilder: (_, _) => const SizedBox(height: 16),
                       itemBuilder: (context, index) {
                         final matrix = matrixNotifier.matrices[index];
                         return MatrixCard(
