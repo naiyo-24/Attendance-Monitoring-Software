@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../providers/auth_provider.dart';
 import '../../widgets/app_bar.dart';
 import '../../cards/notification/notification_card.dart';
 import '../../cards/notification/create_notification_card.dart';
@@ -8,42 +10,45 @@ import '../../models/notification.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/side_nav_bar.dart';
 
-class NotificationScreen extends StatefulWidget {
+class NotificationScreen extends ConsumerStatefulWidget {
 	const NotificationScreen({super.key});
 
 	@override
-	State<NotificationScreen> createState() => _NotificationScreenState();
+	ConsumerState<NotificationScreen> createState() => _NotificationScreenState();
 }
 
-class _NotificationScreenState extends State<NotificationScreen> {
+class _NotificationScreenState extends ConsumerState<NotificationScreen> {
 	late NotificationNotifier notificationNotifier;
 	bool showCreateCard = false;
+	int? adminId;
 
 	@override
 	void initState() {
 		super.initState();
 		notificationNotifier = NotificationNotifier();
-		// Demo data
-		if (notificationNotifier.notifications.isEmpty) {
-			notificationNotifier.setNotifications([
-				NotificationModel(title: 'Welcome!', subtitle: 'This is your admin panel.'),
-				NotificationModel(title: 'System Update', subtitle: 'The system will be down at 10pm.'),
-			]);
-		}
 	}
 
-	void _addNotification(String title, String subtitle) {
-		notificationNotifier.addNotification(NotificationModel(title: title, subtitle: subtitle));
+	void _addNotification(String title, String? subtitle) async {
+		if (adminId == null) return;
+		await notificationNotifier.addNotification(
+			NotificationModel(adminId: adminId, title: title, subtitle: subtitle),
+		);
 		setState(() => showCreateCard = false);
 	}
 
-	void _deleteNotification(int index) {
-		notificationNotifier.deleteNotification(index);
+	void _deleteNotification(int idx) async {
+		if (adminId == null) return;
+		final notif = notificationNotifier.notifications[idx];
+		if (notif.notificationId != null) {
+			await notificationNotifier.deleteNotificationById(notif.notificationId!, adminId!);
+		}
 		setState(() {});
 	}
 
 	@override
 	Widget build(BuildContext context) {
+		final auth = ref.watch(authProvider);
+		adminId = auth.user?.adminId;
 		return NotificationProvider(
 			notifier: notificationNotifier,
 			child: Scaffold(
@@ -51,7 +56,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
 					title: 'Notification Management',
 					subtitle: 'Manage and send notifications',
 				),
-        drawer: const SideNavBar(),
+				drawer: const SideNavBar(),
 				body: Padding(
 					padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
 					child: Column(
@@ -71,19 +76,29 @@ class _NotificationScreenState extends State<NotificationScreen> {
 								),
 							const SizedBox(height: 16),
 							Expanded(
-								child: notificationNotifier.notifications.isEmpty
-										? Center(child: Text('No notifications found.', style: kDescriptionTextStyle(context)))
-										: ListView.builder(
-												itemCount: notificationNotifier.notifications.length,
-												itemBuilder: (context, idx) {
-													final notification = notificationNotifier.notifications[idx];
-													return NotificationCard(
-														notification: notification,
-														onDelete: () => _deleteNotification(idx),
-													);
-												},
-											),
+								child: notificationNotifier.isLoading
+										? const Center(child: CircularProgressIndicator())
+										: notificationNotifier.notifications.isEmpty
+												? Center(child: Text('No notifications found.', style: kDescriptionTextStyle(context)))
+												: ListView.builder(
+														itemCount: notificationNotifier.notifications.length,
+														itemBuilder: (context, idx) {
+															final notification = notificationNotifier.notifications[idx];
+															return NotificationCard(
+																notification: notification,
+																onDelete: () => _deleteNotification(idx),
+															);
+														},
+													),
 							),
+							if (notificationNotifier.error != null)
+								Padding(
+									padding: const EdgeInsets.only(top: 12.0),
+									child: Text(
+										notificationNotifier.error!,
+										style: TextStyle(color: kerror),
+									),
+								),
 						],
 					),
 				),

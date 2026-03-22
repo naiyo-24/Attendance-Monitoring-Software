@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 
 class CreateNotificationCard extends StatefulWidget {
-	final void Function(String title, String subtitle) onCreate;
+	final void Function(String title, String? subtitle) onCreate;
 	final VoidCallback? onCancel;
 	const CreateNotificationCard({super.key, required this.onCreate, this.onCancel});
 
@@ -52,8 +52,8 @@ class _CreateNotificationCardState extends State<CreateNotificationCard> {
 							children: [
 								ElevatedButton(
 									onPressed: () {
-										if (_titleController.text.isNotEmpty && _subtitleController.text.isNotEmpty) {
-											widget.onCreate(_titleController.text, _subtitleController.text);
+										if (_titleController.text.isNotEmpty) {
+											widget.onCreate(_titleController.text, _subtitleController.text.isNotEmpty ? _subtitleController.text : null);
 										}
 									},
 									style: kPremiumButtonStyle(context),

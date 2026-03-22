@@ -16,7 +16,9 @@ class NotificationCard extends StatelessWidget {
 			margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
 			child: ListTile(
 				title: Text(notification.title, style: kHeaderTextStyle(context).copyWith(fontSize: 18)),
-				subtitle: Text(notification.subtitle, style: kDescriptionTextStyle(context)),
+				subtitle: notification.subtitle != null && notification.subtitle!.isNotEmpty
+						? Text(notification.subtitle!, style: kDescriptionTextStyle(context))
+						: null,
 				trailing: IconButton(
 					icon: const Icon(Icons.delete, color: kerror),
 					onPressed: onDelete,
