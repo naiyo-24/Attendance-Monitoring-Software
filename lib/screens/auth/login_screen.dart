@@ -16,19 +16,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   String email = '';
   String password = '';
 
-  void _onLogin(BuildContext context, WidgetRef ref) async {
-    final _ = ref.read(authProvider);
+  Future<void> _onLogin(BuildContext context, WidgetRef ref) async {
+    final auth = ref.read(authProvider);
     if (_formKey.currentState?.validate() ?? false) {
-      // Simulate login success (replace with real logic)
-      // await auth.login(email, password);
-      // if (auth.isLoggedIn) {
-      // Use GoRouter for navigation
-      // ignore: use_build_context_synchronously
-      // context.go('/dashboard');
-      // For pushReplacement, use context.go
-      // ignore: use_build_context_synchronously
-      context.go('/dashboard');
-      // }
+      await auth.login(email, password);
+      if (auth.user != null) {
+        if (context.mounted) {
+          context.go('/dashboard');
+        }
+      }
     }
   }
 
