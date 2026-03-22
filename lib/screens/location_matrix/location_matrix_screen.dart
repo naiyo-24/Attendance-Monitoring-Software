@@ -1,64 +1,83 @@
 import 'package:attendance_admin_panel/widgets/side_nav_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../models/location_matrix.dart';
 import '../../widgets/app_bar.dart';
 import '../../theme/app_theme.dart';
 import '../../cards/location_matrix/matrix_card.dart';
 import '../../cards/location_matrix/add_edit_matrix_card.dart';
+import '../../notifiers/location_matrix_notifier.dart';
+import '../../providers/auth_provider.dart';
 
-class LocationMatrixScreen extends StatefulWidget {
+class LocationMatrixScreen extends ConsumerStatefulWidget {
   const LocationMatrixScreen({super.key});
 
   @override
-  State<LocationMatrixScreen> createState() => _LocationMatrixScreenState();
+  ConsumerState<LocationMatrixScreen> createState() => _LocationMatrixScreenState();
 }
 
-class _LocationMatrixScreenState extends State<LocationMatrixScreen> {
-  // Dummy data for now, replace with provider/notifier logic
-  List<Map<String, dynamic>> matrices = [
-    {'latitude': '22.5726', 'longitude': '88.3639'},
-    {'latitude': '28.7041', 'longitude': '77.1025'},
-  ];
-
-  void _openAddEditMatrix({int? index}) async {
-    // Show modal bottom sheet for add/edit
-    await showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      builder: (context) => Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-        ),
-        child: AddEditMatrixCard(
-          latitude: index != null ? matrices[index]['latitude'] : null,
-          longitude: index != null ? matrices[index]['longitude'] : null,
-          onSave: (lat, lng) {
-            setState(() {
-              if (index != null) {
-                matrices[index] = {'latitude': lat, 'longitude': lng};
-              } else {
-                matrices.add({'latitude': lat, 'longitude': lng});
-              }
-            });
-            Navigator.pop(context);
-          },
-        ),
-      ),
-    );
-  }
-
-  void _deleteMatrix(int index) {
-    setState(() {
-      matrices.removeAt(index);
-    });
-  }
-
+class _LocationMatrixScreenState extends ConsumerState<LocationMatrixScreen> {
   @override
   Widget build(BuildContext context) {
+    final auth = ref.watch(authProvider);
+    final adminId = auth.user?.adminId;
+    final matrixNotifier = ref.watch(locationMatrixNotifierProvider);
+    if (adminId != null && matrixNotifier.matrices.isEmpty && !matrixNotifier.isLoading) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(locationMatrixNotifierProvider).fetchMatrices(adminId);
+      });
+    }
+    void openAddEditMatrix({int? index}) async {
+      final matrix = index != null ? matrixNotifier.matrices[index] : null;
+      await showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        builder: (context) => Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: AddEditMatrixCard(
+            latitude: matrix?.latitude.toString(),
+            longitude: matrix?.longitude.toString(),
+            onSave: (lat, lng) async {
+              if (adminId == null) return;
+              if (index != null && matrix != null) {
+                await ref.read(locationMatrixNotifierProvider).updateMatrix(
+                  LocationMatrix(
+                    locationMatrixId: matrix.locationMatrixId,
+                    adminId: adminId,
+                    latitude: double.tryParse(lat) ?? 0.0,
+                    longitude: double.tryParse(lng) ?? 0.0,
+                  ),
+                  adminId,
+                );
+              } else {
+                await ref.read(locationMatrixNotifierProvider).addMatrix(
+                  LocationMatrix(
+                    adminId: adminId,
+                    latitude: double.tryParse(lat) ?? 0.0,
+                    longitude: double.tryParse(lng) ?? 0.0,
+                  ),
+                );
+              }
+              Navigator.pop(context);
+            },
+          ),
+        ),
+      );
+    }
+    void deleteMatrix(int index) async {
+      if (adminId == null) return;
+      final matrix = matrixNotifier.matrices[index];
+      if (matrix.locationMatrixId != null) {
+        await ref.read(locationMatrixNotifierProvider).deleteMatrix(matrix.locationMatrixId!, adminId);
+      }
+    }
     return Scaffold(
-      drawer: const SideNavBar(), 
+      drawer: const SideNavBar(),
       appBar: const PremiumAppBar(
         title: 'Location Matrix',
         subtitle: 'Manage allowed locations',
@@ -81,22 +100,35 @@ class _LocationMatrixScreenState extends State<LocationMatrixScreen> {
                 ),
                 icon: const Icon(Icons.add_location_alt_rounded, size: 26),
                 label: const Text('Create Location Matrix'),
-                onPressed: () => _openAddEditMatrix(),
+                onPressed: () => openAddEditMatrix(),
               ),
             ),
             const SizedBox(height: 24),
             Expanded(
-              child: ListView.separated(
-                itemCount: matrices.length,
-                separatorBuilder: (_, _) => const SizedBox(height: 16),
-                itemBuilder: (context, index) => MatrixCard(
-                  latitude: matrices[index]['latitude'],
-                  longitude: matrices[index]['longitude'],
-                  onEdit: () => _openAddEditMatrix(index: index),
-                  onDelete: () => _deleteMatrix(index),
+              child: matrixNotifier.isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : ListView.separated(
+                      itemCount: matrixNotifier.matrices.length,
+                      separatorBuilder: (_, __) => const SizedBox(height: 16),
+                      itemBuilder: (context, index) {
+                        final matrix = matrixNotifier.matrices[index];
+                        return MatrixCard(
+                          latitude: matrix.latitude.toString(),
+                          longitude: matrix.longitude.toString(),
+                          onEdit: () => openAddEditMatrix(index: index),
+                          onDelete: () => deleteMatrix(index),
+                        );
+                      },
+                    ),
+            ),
+            if (matrixNotifier.error != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 12.0),
+                child: Text(
+                  matrixNotifier.error!,
+                  style: TextStyle(color: kerror),
                 ),
               ),
-            ),
           ],
         ),
       ),

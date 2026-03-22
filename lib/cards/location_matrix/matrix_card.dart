@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../theme/app_theme.dart';
+import '../../providers/auth_provider.dart';
+import '../../notifiers/location_matrix_notifier.dart';
 
-class MatrixCard extends StatelessWidget {
+class MatrixCard extends ConsumerWidget {
   final String latitude;
   final String longitude;
   final VoidCallback onEdit;
@@ -16,7 +19,16 @@ class MatrixCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final auth = ref.watch(authProvider);
+    final adminId = auth.user?.adminId;
+    final matrixNotifier = ref.watch(locationMatrixNotifierProvider);
+    // Optionally, fetch matrices for current adminId if needed
+    if (adminId != null && matrixNotifier.matrices.isEmpty && !matrixNotifier.isLoading) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(locationMatrixNotifierProvider).fetchMatrices(adminId);
+      });
+    }
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 3,
