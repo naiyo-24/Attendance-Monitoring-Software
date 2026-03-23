@@ -86,7 +86,7 @@ class _CreateEditHolidayCardState extends State<CreateEditHolidayCard> {
           TextField(
             controller: _occasionController,
             decoration: const InputDecoration(
-              labelText: 'Occasion',
+              labelText: 'Title',
               border: OutlineInputBorder(),
             ),
           ),
