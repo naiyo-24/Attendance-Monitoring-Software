@@ -20,7 +20,7 @@ class EmployeeScreen extends ConsumerStatefulWidget {
 class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
   String searchQuery = '';
 
-  void _openAddEditEmployee({int? index, Employee? employee}) async {
+  void _openAddEditEmployee({Employee? employee}) async {
     await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -53,6 +53,7 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
             final adminId = auth.user?.adminId;
             if (adminId == null) return;
             final emp = Employee(
+              employeeId: employee?.employeeId,
               name: empMap['name'],
               phone: empMap['phone'],
               email: empMap['email'],
@@ -65,8 +66,8 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
               address: empMap['address'],
               profilePhoto: empMap['profilePhoto'],
             );
-            if (index != null && employee != null) {
-              await notifier.updateEmployee(adminId, index, emp);
+            if (employee?.employeeId != null) {
+              await notifier.updateEmployee(adminId, employee!.employeeId!, emp);
             } else {
               await notifier.addEmployee(adminId, emp);
             }
@@ -183,13 +184,13 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
                           'accountNo': filteredEmployees[index].accountNo,
                           'ifsc': filteredEmployees[index].ifsc,
                           'designation': filteredEmployees[index].designation,
+                          'address': filteredEmployees[index].address,
                           'profilePhoto': filteredEmployees[index].profilePhoto,
                         },
                         onEdit: () => _openAddEditEmployee(
-                          index: index,
                           employee: filteredEmployees[index],
                         ),
-                        onDelete: () => _deleteEmployee(index),
+                        onDelete: () => _deleteEmployee(filteredEmployees[index].employeeId!),
                       ),
                     ),
             ),

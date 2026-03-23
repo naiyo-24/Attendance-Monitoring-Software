@@ -1,4 +1,5 @@
 class Employee {
+  final int? employeeId;
   final String name;
   final String phone;
   final String email;
@@ -12,6 +13,7 @@ class Employee {
   final String? profilePhoto;
 
   Employee({
+    this.employeeId,
     required this.name,
     required this.phone,
     required this.email,
@@ -27,6 +29,7 @@ class Employee {
 
   factory Employee.fromJson(Map<String, dynamic> json) {
     return Employee(
+      employeeId: json['employee_id'],
       name: json['full_name'] ?? '',
       phone: json['phone_no'] ?? '',
       email: json['email'] ?? '',
@@ -43,6 +46,7 @@ class Employee {
 
   Map<String, dynamic> toJson() {
     return {
+      'employee_id': employeeId,
       'full_name': name,
       'phone_no': phone,
       'email': email,
