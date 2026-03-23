@@ -1,11 +1,14 @@
 import 'package:dio/dio.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import '../models/holiday.dart';
 import 'api_url.dart';
 
 class HolidayService {
   
   final Dio _dio;
-  HolidayService([Dio? dio]) : _dio = dio ?? Dio();
+  HolidayService([Dio? dio]) : _dio = (dio ?? Dio()) {
+    _dio.interceptors.add(PrettyDioLogger());
+  }
 
   Future<Holiday> createHoliday({required int adminId, required Holiday holiday}) async {
     final response = await _dio.post(
