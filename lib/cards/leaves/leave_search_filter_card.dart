@@ -1,25 +1,26 @@
 import 'package:flutter/material.dart';
 import '../../models/employee.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/employee_provider.dart';
 import '../../theme/app_theme.dart';
 
-class LeaveSearchFilterCard extends StatefulWidget {
+class LeaveSearchFilterCard extends ConsumerStatefulWidget {
 	final void Function(String search, DateTime? date, Employee? employee) onFilter;
 	const LeaveSearchFilterCard({super.key, required this.onFilter});
 
 	@override
-	State<LeaveSearchFilterCard> createState() => _LeaveSearchFilterCardState();
+	ConsumerState<LeaveSearchFilterCard> createState() => _LeaveSearchFilterCardState();
 }
 
-class _LeaveSearchFilterCardState extends State<LeaveSearchFilterCard> {
+class _LeaveSearchFilterCardState extends ConsumerState<LeaveSearchFilterCard> {
 	final TextEditingController _searchController = TextEditingController();
 	DateTime? _selectedDate;
 	Employee? _selectedEmployee;
 
 	@override
 	Widget build(BuildContext context) {
-		// Use EmployeeNotifier from provider context
-		final employeeNotifier = EmployeeProvider.of(context);
+		// Use EmployeeNotifier from Riverpod
+		final employeeNotifier = ref.watch(employeeNotifierProvider);
 		final employees = employeeNotifier.employees;
 		return Card(
 			shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),

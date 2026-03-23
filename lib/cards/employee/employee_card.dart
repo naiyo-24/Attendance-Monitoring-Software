@@ -65,6 +65,7 @@ class EmployeeCard extends StatelessWidget {
             _infoRow('Branch Name', employee['branchName']),
             _infoRow('Account No.', employee['accountNo']),
             _infoRow('IFSC Code', employee['ifsc']),
+            _infoRow('Address', employee['address']),
           ],
         ),
       ),

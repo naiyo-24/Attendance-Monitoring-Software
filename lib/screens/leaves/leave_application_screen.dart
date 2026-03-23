@@ -1,33 +1,30 @@
 import 'package:flutter/material.dart';
 import '../../widgets/app_bar.dart';
 import '../../cards/leaves/leave_search_filter_card.dart';
-import '../../cards/leaves/leave_request_card.dart';
 import '../../notifiers/leaves_notifier.dart';
 import '../../providers/leaves_provider.dart';
-import '../../notifiers/employee_notifier.dart';
-import '../../providers/employee_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../models/leaves.dart';
 import '../../models/employee.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/side_nav_bar.dart';
 
-class LeaveApplicationScreen extends StatefulWidget {
-	const LeaveApplicationScreen({super.key});
 
-	@override
-	State<LeaveApplicationScreen> createState() => _LeaveApplicationScreenState();
+class LeaveApplicationScreen extends ConsumerStatefulWidget {
+  const LeaveApplicationScreen({super.key});
+
+  @override
+  ConsumerState<LeaveApplicationScreen> createState() => _LeaveApplicationScreenState();
 }
 
-class _LeaveApplicationScreenState extends State<LeaveApplicationScreen> {
+class _LeaveApplicationScreenState extends ConsumerState<LeaveApplicationScreen> {
 	late LeavesNotifier leavesNotifier;
-	late EmployeeNotifier employeeNotifier;
 	List<Leave> filteredLeaves = [];
 
 	@override
 	void initState() {
 		super.initState();
 		leavesNotifier = LeavesNotifier();
-		employeeNotifier = EmployeeNotifier();
 		// Demo data
 		if (leavesNotifier.leaves.isEmpty) {
 			leavesNotifier.setLeaves(LeavesNotifier.demoLeaves());
@@ -49,52 +46,38 @@ class _LeaveApplicationScreenState extends State<LeaveApplicationScreen> {
 		});
 	}
 
-	void _updateLeaveStatus(int index, LeaveStatus status) {
-		leavesNotifier.updateLeaveStatus(index, status);
-		setState(() {});
-	}
 
 	@override
 	Widget build(BuildContext context) {
-		return EmployeeProvider(
-			notifier: employeeNotifier,
-			child: LeavesProvider(
-				notifier: leavesNotifier,
-				child: Scaffold(
-					appBar: const PremiumAppBar(
-						title: 'Leave Applications',
-						subtitle: 'Manage employee leave requests',
-					),
-          drawer: const SideNavBar(),
-					body: Padding(
-						padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-						child: Column(
-							crossAxisAlignment: CrossAxisAlignment.start,
-							children: [
-								LeaveSearchFilterCard(onFilter: _filterLeaves),
-								const SizedBox(height: 16),
-								Expanded(
-									child: filteredLeaves.isEmpty
-											? Center(child: Text('No leave requests found.', style: kDescriptionTextStyle(context)))
-											: ListView.builder(
-													itemCount: filteredLeaves.length,
-													itemBuilder: (context, idx) {
-														final leave = filteredLeaves[idx];
-														final leaveIndex = leavesNotifier.leaves.indexOf(leave);
-														return LeaveRequestCard(
-															leave: leave,
-															onApprove: leave.status == LeaveStatus.pending
-																	? () => _updateLeaveStatus(leaveIndex, LeaveStatus.approved)
-																	: null,
-															onReject: leave.status == LeaveStatus.pending
-																	? () => _updateLeaveStatus(leaveIndex, LeaveStatus.rejected)
-																	: null,
-														);
-													},
-												),
-								),
-							],
-						),
+		// Use Riverpod for employee list in LeaveSearchFilterCard
+		return LeavesProvider(
+			notifier: leavesNotifier,
+			child: Scaffold(
+				appBar: const PremiumAppBar(
+					title: 'Leave Applications',
+					subtitle: 'Manage employee leave requests',
+				),
+				drawer: const SideNavBar(),
+				body: Padding(
+					padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+					child: Column(
+						crossAxisAlignment: CrossAxisAlignment.start,
+						children: [
+							LeaveSearchFilterCard(onFilter: _filterLeaves),
+							const SizedBox(height: 16),
+							Expanded(
+								child: filteredLeaves.isEmpty
+										? Center(child: Text('No leave requests found.', style: kDescriptionTextStyle(context)))
+										: ListView.builder(
+												itemCount: filteredLeaves.length,
+												itemBuilder: (context, idx) {
+												  return null;
+												
+													// ...existing code...
+												},
+											),
+							),
+						],
 					),
 				),
 			),

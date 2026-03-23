@@ -11,6 +11,12 @@ const String createNotificationEndpoint = '/notifications/';
 String getNotificationsByAdminEndpoint(int adminId) => '/notifications/admin/$adminId';
 String deleteNotificationEndpoint(int notificationId, int adminId) => '/notifications/$notificationId/admin/$adminId';
 
+// Employee endpoints
+const String createEmployeeEndpoint = '/employees/';
+String getEmployeesByAdminEndpoint(int adminId) => '/employees/admin/$adminId';
+String updateEmployeeByAdminEndpoint(int employeeId, int adminId) => '/employees/$employeeId/admin/$adminId';
+String deleteEmployeeByAdminEndpoint(int employeeId, int adminId) => '/employees/$employeeId/admin/$adminId';
+
 // Location Matrix endpoints
 const String createLocationMatrixEndpoint = '/location-matrix/';
 const String getAllLocationMatricesEndpoint = '/location-matrix/';

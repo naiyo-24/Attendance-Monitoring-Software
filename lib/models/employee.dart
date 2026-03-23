@@ -8,6 +8,7 @@ class Employee {
   final String accountNo;
   final String ifsc;
   final String designation;
+  final String address;
   final String? profilePhoto;
 
   Employee({
@@ -20,6 +21,39 @@ class Employee {
     required this.accountNo,
     required this.ifsc,
     required this.designation,
+    required this.address,
     this.profilePhoto,
   });
+
+  factory Employee.fromJson(Map<String, dynamic> json) {
+    return Employee(
+      name: json['full_name'] ?? '',
+      phone: json['phone_no'] ?? '',
+      email: json['email'] ?? '',
+      password: json['password'] ?? '',
+      bankName: json['bank_name'] ?? '',
+      branchName: json['branch_name'] ?? '',
+      accountNo: json['bank_account_no'] ?? '',
+      ifsc: json['ifsc_code'] ?? '',
+      designation: json['designation'] ?? '',
+      address: json['address'] ?? '',
+      profilePhoto: json['profile_photo'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'full_name': name,
+      'phone_no': phone,
+      'email': email,
+      'password': password,
+      'bank_name': bankName,
+      'branch_name': branchName,
+      'bank_account_no': accountNo,
+      'ifsc_code': ifsc,
+      'designation': designation,
+      'address': address,
+      'profile_photo': profilePhoto,
+    };
+  }
 }

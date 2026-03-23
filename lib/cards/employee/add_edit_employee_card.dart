@@ -25,6 +25,7 @@ class _AddEditEmployeeCardState extends State<AddEditEmployeeCard> {
   late TextEditingController _accountNoController;
   late TextEditingController _ifscController;
   late TextEditingController _designationController;
+  late TextEditingController _addressController;
 
   @override
   void initState() {
@@ -38,6 +39,7 @@ class _AddEditEmployeeCardState extends State<AddEditEmployeeCard> {
     _accountNoController = TextEditingController(text: widget.employee?['accountNo'] ?? '');
     _ifscController = TextEditingController(text: widget.employee?['ifsc'] ?? '');
     _designationController = TextEditingController(text: widget.employee?['designation'] ?? '');
+    _addressController = TextEditingController(text: widget.employee?['address'] ?? '');
   }
 
   @override
@@ -51,6 +53,7 @@ class _AddEditEmployeeCardState extends State<AddEditEmployeeCard> {
     _accountNoController.dispose();
     _ifscController.dispose();
     _designationController.dispose();
+    _addressController.dispose();
     super.dispose();
   }
 
@@ -87,6 +90,8 @@ class _AddEditEmployeeCardState extends State<AddEditEmployeeCard> {
               _buildTextField(_ifscController, 'IFSC Code'),
               const SizedBox(height: 12),
               _buildTextField(_designationController, 'Designation'),
+              const SizedBox(height: 12),
+              _buildTextField(_addressController, 'Address'),
               const SizedBox(height: 24),
               SizedBox(
                 width: double.infinity,
@@ -104,6 +109,7 @@ class _AddEditEmployeeCardState extends State<AddEditEmployeeCard> {
                         'accountNo': _accountNoController.text,
                         'ifsc': _ifscController.text,
                         'designation': _designationController.text,
+                        'address': _addressController.text,
                         'profilePhoto': null,
                       });
                     }
