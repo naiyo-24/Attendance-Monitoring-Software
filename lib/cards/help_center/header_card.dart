@@ -21,7 +21,7 @@ class HeaderCard extends StatelessWidget {
 						ClipRRect(
 							borderRadius: BorderRadius.circular(12),
 							child: Image.asset(
-								helpCenter.logoPath,
+								'assets/logo/naiyo24_logo.png',
 								width: 72,
 								height: 72,
 								fit: BoxFit.cover,
@@ -32,9 +32,9 @@ class HeaderCard extends StatelessWidget {
 							child: Column(
 								crossAxisAlignment: CrossAxisAlignment.start,
 								children: [
-									Text(helpCenter.header, style: kHeaderTextStyle(context)),
+									Text('Naiyo24 Pvt. Ltd.', style: kHeaderTextStyle(context)),
 									const SizedBox(height: 4),
-									Text(helpCenter.tagline, style: kTaglineTextStyle(context)),
+									Text('Your trusted HR & Payroll partner', style: kTaglineTextStyle(context)),
 									const SizedBox(height: 10),
 									Text(helpCenter.description, style: kDescriptionTextStyle(context)),
 								],

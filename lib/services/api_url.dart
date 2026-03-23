@@ -1,3 +1,5 @@
+// Help Center endpoints
+const String getAllHelpCentersEndpoint = '/help-center/';
 // Replace with your backend URL
 const String baseUrl = 'http://127.0.0.1:8000'; 
 
