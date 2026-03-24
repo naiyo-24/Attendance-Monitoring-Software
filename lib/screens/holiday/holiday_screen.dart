@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../providers/auth_provider.dart';
 import '../../widgets/app_bar.dart';
 import '../../widgets/side_nav_bar.dart';
 import '../../theme/app_theme.dart';
@@ -7,19 +8,18 @@ import '../../cards/holiday/holiday_detail_card.dart';
 import '../../cards/holiday/create_edit_holiday_card.dart';
 import '../../notifiers/holiday_notifier.dart';
 import '../../models/holiday.dart';
-import '../../notifiers/auth_notifier.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class HolidayScreen extends StatefulWidget {
+class HolidayScreen extends ConsumerStatefulWidget {
   const HolidayScreen({super.key});
 
   @override
-  State<HolidayScreen> createState() => _HolidayScreenState();
+  ConsumerState<HolidayScreen> createState() => _HolidayScreenState();
 }
 
-class _HolidayScreenState extends State<HolidayScreen> {
+class _HolidayScreenState extends ConsumerState<HolidayScreen> {
   final DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
-  late AuthNotifier _authNotifier;
   HolidayNotifier? _holidayNotifier;
   bool _initialized = false;
 
@@ -27,10 +27,14 @@ class _HolidayScreenState extends State<HolidayScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (!_initialized) {
-      _authNotifier = AuthNotifier();
-      final adminId = _authNotifier.user?.adminId ?? 1; // fallback for demo
-      _holidayNotifier = HolidayNotifier(adminId: adminId);
-      _holidayNotifier!.fetchHolidays();
+      final authNotifier = ref.read(authProvider);
+      final adminId = authNotifier.user?.adminId;
+      if (adminId != null) {
+        _holidayNotifier = HolidayNotifier(adminId: adminId);
+        _holidayNotifier!.fetchHolidays();
+      } else {
+        // Optionally handle the case where adminId is not available (e.g., show error or loading)
+      }
       _initialized = true;
     }
   }
