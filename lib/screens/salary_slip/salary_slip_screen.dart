@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:io' show File;
 
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -48,14 +48,26 @@ class _SalarySlipScreenState extends ConsumerState<SalarySlipScreen> {
 			orElse: () => SalarySlip(employee: emp),
 		);
 		final result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
-		if (result != null && result.files.single.path != null) {
-			final file = File(result.files.single.path!);
-			await salarySlipNotifier.uploadOrUpdateSalarySlip(
-				adminId: authNotifier.user!.adminId!,
-				employee: emp,
-				pdfFile: file,
-				slipId: slip.slipId,
-			);
+		if (result != null) {
+			if (result.files.single.bytes != null) {
+				// Web: use bytes
+				await salarySlipNotifier.uploadOrUpdateSalarySlip(
+					adminId: authNotifier.user!.adminId!,
+					employee: emp,
+					pdfBytes: result.files.single.bytes!,
+					fileName: result.files.single.name,
+					slipId: slip.slipId,
+				);
+			} else if (result.files.single.path != null) {
+				// Mobile/Desktop: use File
+				final file = File(result.files.single.path!);
+				await salarySlipNotifier.uploadOrUpdateSalarySlip(
+					adminId: authNotifier.user!.adminId!,
+					employee: emp,
+					pdfFile: file,
+					slipId: slip.slipId,
+				);
+			}
 		}
 	}
 
@@ -96,24 +108,26 @@ class _SalarySlipScreenState extends ConsumerState<SalarySlipScreen> {
 				padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
 				child: isLoading
 						? const Center(child: CircularProgressIndicator())
-						: employeeNotifier.employees.isEmpty
-								? const Center(child: Text('No employees found.'))
-								: ListView.builder(
-										itemCount: employeeNotifier.employees.length,
-										itemBuilder: (context, idx) {
-											final emp = employeeNotifier.employees[idx];
-											final slip = salarySlipNotifier.salarySlips.firstWhere(
-												(s) => s.employee.employeeId == emp.employeeId,
-												orElse: () => SalarySlip(employee: emp),
-											);
-											return SalarySlipCard(
-												slip: slip,
-												onUploadPdf: () => _pickPdf(idx),
-												onViewPdf: slip.salarySlipUrl != null ? () => _viewPdf(slip.salarySlipUrl) : null,
-												onDeletePdf: slip.slipId != null ? () => _deletePdf(idx) : null,
-											);
-										},
-									),
+						: salarySlipNotifier.error != null
+								? Center(child: Text('Error: ${salarySlipNotifier.error}', style: TextStyle(color: Colors.red)))
+								: employeeNotifier.employees.isEmpty
+										? const Center(child: Text('No employees found.'))
+										: ListView.builder(
+												itemCount: employeeNotifier.employees.length,
+												itemBuilder: (context, idx) {
+													final emp = employeeNotifier.employees[idx];
+													final slip = salarySlipNotifier.salarySlips.firstWhere(
+														(s) => s.employee.employeeId == emp.employeeId,
+														orElse: () => SalarySlip(employee: emp),
+													);
+													return SalarySlipCard(
+														slip: slip,
+														onUploadPdf: () => _pickPdf(idx),
+														onViewPdf: slip.salarySlipUrl != null ? () => _viewPdf(slip.salarySlipUrl) : null,
+														onDeletePdf: slip.slipId != null ? () => _deletePdf(idx) : null,
+													);
+												},
+											),
 			),
 		);
 	}
