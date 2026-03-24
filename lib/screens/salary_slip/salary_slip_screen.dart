@@ -41,14 +41,18 @@ class _SalarySlipScreenState extends ConsumerState<SalarySlipScreen> {
 	Future<void> _pickPdf(int index) async {
 		final salarySlipNotifier = ref.read(salarySlipNotifierProvider);
 		final authNotifier = ref.read(authProvider);
-		final _ = ref.read(employeeNotifierProvider);
+		final employeeNotifier = ref.read(employeeNotifierProvider);
+		final emp = employeeNotifier.employees[index];
+		final slip = salarySlipNotifier.salarySlips.firstWhere(
+			(s) => s.employee.employeeId == emp.employeeId,
+			orElse: () => SalarySlip(employee: emp),
+		);
 		final result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
 		if (result != null && result.files.single.path != null) {
-			final slip = salarySlipNotifier.salarySlips[index];
 			final file = File(result.files.single.path!);
 			await salarySlipNotifier.uploadOrUpdateSalarySlip(
 				adminId: authNotifier.user!.adminId!,
-				employee: slip.employee,
+				employee: emp,
 				pdfFile: file,
 				slipId: slip.slipId,
 			);
@@ -57,7 +61,12 @@ class _SalarySlipScreenState extends ConsumerState<SalarySlipScreen> {
 
 	Future<void> _deletePdf(int index) async {
 		final salarySlipNotifier = ref.read(salarySlipNotifierProvider);
-		final slip = salarySlipNotifier.salarySlips[index];
+		final employeeNotifier = ref.read(employeeNotifierProvider);
+		final emp = employeeNotifier.employees[index];
+		final slip = salarySlipNotifier.salarySlips.firstWhere(
+			(s) => s.employee.employeeId == emp.employeeId,
+			orElse: () => SalarySlip(employee: emp),
+		);
 		if (slip.slipId != null) {
 			await salarySlipNotifier.deleteSalarySlip(slipId: slip.slipId!);
 		}
@@ -93,7 +102,6 @@ class _SalarySlipScreenState extends ConsumerState<SalarySlipScreen> {
 										itemCount: employeeNotifier.employees.length,
 										itemBuilder: (context, idx) {
 											final emp = employeeNotifier.employees[idx];
-											// Find the salary slip for this employee, or create a dummy
 											final slip = salarySlipNotifier.salarySlips.firstWhere(
 												(s) => s.employee.employeeId == emp.employeeId,
 												orElse: () => SalarySlip(employee: emp),
