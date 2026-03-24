@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import '../../services/api_url.dart';
 import '../../theme/app_theme.dart';
 
 class EmployeeCard extends StatelessWidget {
@@ -29,7 +30,13 @@ class EmployeeCard extends StatelessWidget {
                 CircleAvatar(
                   radius: 28,
                   backgroundColor: kBrown.withAlpha((0.1 * 255).toInt()),
-                  backgroundImage: employee['profilePhoto'] != null ? NetworkImage(employee['profilePhoto']) : null,
+                  backgroundImage: employee['profilePhoto'] != null
+  ? NetworkImage(
+      employee['profilePhoto'].toString().startsWith('http')
+        ? employee['profilePhoto']
+        : baseUrl + (employee['profilePhoto'].toString().startsWith('/') ? employee['profilePhoto'] : '/${employee['profilePhoto']}')
+    )
+  : null,
                   child: employee['profilePhoto'] == null
                       ? const Icon(Iconsax.user, color: kBrown, size: 32)
                       : null,

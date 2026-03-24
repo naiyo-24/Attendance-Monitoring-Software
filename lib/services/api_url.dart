@@ -1,5 +1,4 @@
 
-
 // Replace with your backend URL
 const String baseUrl = 'http://127.0.0.1:8000'; 
 
@@ -41,3 +40,7 @@ String getSalarySlipByIdEndpoint(int slipId) => '/salary_slip/$slipId';
 String getAllSalarySlipsByAdminAndEmployeeEndpoint(int adminId, int employeeId) => '/salary_slip/all/$adminId/$employeeId';
 String getSalarySlipsByEmployeeEndpoint(int employeeId) => '/salary_slip/employee/$employeeId';
 String deleteSalarySlipEndpoint(int slipId) => '/salary_slip/$slipId';
+
+// Leave Request endpoints
+String getLeaveRequestsByAdminAndEmployeeEndpoint(int adminId, int employeeId) => '/get-all/leave_requests/admin/$adminId/employee/$employeeId';
+String updateLeaveRequestByIdEndpoint(int leaveId) => '/update/leave_requests/$leaveId';

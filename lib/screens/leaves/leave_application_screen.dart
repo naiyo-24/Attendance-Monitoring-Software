@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import '../../providers/auth_provider.dart';
+import '../../providers/employee_provider.dart';
 import '../../widgets/app_bar.dart';
 import '../../cards/leaves/leave_search_filter_card.dart';
+import '../../cards/leaves/leave_request_card.dart';
 import '../../notifiers/leaves_notifier.dart';
 import '../../providers/leaves_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,7 +19,6 @@ class LeaveApplicationScreen extends ConsumerStatefulWidget {
   @override
   ConsumerState<LeaveApplicationScreen> createState() => _LeaveApplicationScreenState();
 }
-
 class _LeaveApplicationScreenState extends ConsumerState<LeaveApplicationScreen> {
 	late LeavesNotifier leavesNotifier;
 	List<Leave> filteredLeaves = [];
@@ -25,11 +27,26 @@ class _LeaveApplicationScreenState extends ConsumerState<LeaveApplicationScreen>
 	void initState() {
 		super.initState();
 		leavesNotifier = LeavesNotifier();
-		// Demo data
-		if (leavesNotifier.leaves.isEmpty) {
-			leavesNotifier.setLeaves(LeavesNotifier.demoLeaves());
+		_fetchAllLeavesForAdmin();
+	}
+
+	Future<void> _fetchAllLeavesForAdmin() async {
+		// Get current adminId from provider
+		final container = ProviderContainer();
+		final authNotifier = container.read(authProvider);
+		final employeeNotifier = container.read(employeeNotifierProvider);
+		if (authNotifier.user?.adminId != null) {
+			await employeeNotifier.fetchEmployees(authNotifier.user!.adminId!);
+			List<Leave> allLeaves = [];
+			for (final emp in employeeNotifier.employees) {
+				await leavesNotifier.fetchLeavesByAdminAndEmployee(adminId: authNotifier.user!.adminId!, employee: emp);
+				allLeaves.addAll(leavesNotifier.leaves);
+			}
+			setState(() {
+				leavesNotifier.setLeaves(allLeaves);
+				filteredLeaves = allLeaves;
+			});
 		}
-		filteredLeaves = leavesNotifier.leaves;
 	}
 
 	void _filterLeaves(String search, DateTime? date, Employee? employee) {
@@ -44,6 +61,24 @@ class _LeaveApplicationScreenState extends ConsumerState<LeaveApplicationScreen>
 				return matchesSearch && matchesDate && matchesEmployee;
 			}).toList();
 		});
+	}
+
+	Future<void> _approveLeave(int idx) async {
+		final leave = filteredLeaves[idx];
+		await leavesNotifier.updateLeaveStatus(
+			leaveId: leave.leaveId!,
+			status: LeaveStatus.approved,
+		);
+		setState(() {});
+	}
+
+	Future<void> _rejectLeave(int idx) async {
+		final leave = filteredLeaves[idx];
+		await leavesNotifier.updateLeaveStatus(
+			leaveId: leave.leaveId!,
+			status: LeaveStatus.rejected,
+		);
+		setState(() {});
 	}
 
 
@@ -71,9 +106,12 @@ class _LeaveApplicationScreenState extends ConsumerState<LeaveApplicationScreen>
 										: ListView.builder(
 												itemCount: filteredLeaves.length,
 												itemBuilder: (context, idx) {
-												  return null;
-												
-													// ...existing code...
+													final leave = filteredLeaves[idx];
+													return LeaveRequestCard(
+														leave: leave,
+														onApprove: leave.status == LeaveStatus.pending ? () => _approveLeave(idx) : null,
+														onReject: leave.status == LeaveStatus.pending ? () => _rejectLeave(idx) : null,
+													);
 												},
 											),
 							),
