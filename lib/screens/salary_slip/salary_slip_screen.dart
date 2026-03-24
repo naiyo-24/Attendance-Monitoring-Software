@@ -86,7 +86,19 @@ class _SalarySlipScreenState extends ConsumerState<SalarySlipScreen> {
 
 	void _viewPdf(String? url) async {
 		if (url != null) {
-			final fullUrl = url.startsWith('http') ? url : baseUrl + url;
+			// Ensure there is exactly one slash between baseUrl and url
+			String fullUrl;
+			if (url.startsWith('http')) {
+				fullUrl = url;
+			} else {
+				if (baseUrl.endsWith('/') && url.startsWith('/')) {
+					fullUrl = baseUrl + url.substring(1);
+				} else if (!baseUrl.endsWith('/') && !url.startsWith('/')) {
+					fullUrl = '$baseUrl/$url';
+				} else {
+					fullUrl = baseUrl + url;
+				}
+			}
 			// ignore: deprecated_member_use
 			await launchUrlString(fullUrl, mode: LaunchMode.externalApplication);
 		}
