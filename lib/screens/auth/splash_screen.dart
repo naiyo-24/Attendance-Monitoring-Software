@@ -104,7 +104,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 							child: Text(
 								'MMS Attendance Monitoring System',
 								style: kHeaderTextStyle(context).copyWith(
-									color: kPink,
+									color: kWhite,
 									fontSize: 32,
 									letterSpacing: 1.2,
 									shadows: [

@@ -71,7 +71,8 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
             } else {
               await notifier.addEmployee(adminId, emp);
             }
-            if (mounted) Navigator.pop(context);
+            if (!context.mounted) return;
+              Navigator.of(context).pop();
           },
         ),
       ),

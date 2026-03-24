@@ -57,7 +57,8 @@ class _HolidayScreenState extends State<HolidayScreen> {
             } else {
               await _holidayNotifier!.addHoliday(newHoliday);
             }
-            Navigator.pop(context);
+            if (!context.mounted) return;
+              Navigator.of(context).pop();
             setState(() {
               _selectedDay = date;
             });

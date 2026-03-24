@@ -25,7 +25,7 @@ class SalarySlipCard extends StatelessWidget {
 						Row(
 							children: [
 								CircleAvatar(
-									  backgroundColor: kGreen.withAlpha((0.15 * 255).toInt()),
+									backgroundColor: kGreen.withAlpha((0.15 * 255).toInt()),
 									child: Text(emp.name[0], style: kHeaderTextStyle(context).copyWith(fontSize: 18)),
 								),
 								const SizedBox(width: 12),
@@ -52,7 +52,7 @@ class SalarySlipCard extends StatelessWidget {
 								),
 								const SizedBox(width: 10),
 								ElevatedButton.icon(
-									onPressed: slip.pdfPath != null ? onViewPdf : null,
+									onPressed: slip.salarySlipUrl != null ? onViewPdf : null,
 									icon: const Icon(Icons.picture_as_pdf, size: 18),
 									label: const Text('View PDF', style: TextStyle(color: Colors.white)),
 									style: kPremiumButtonStyle(context).copyWith(
@@ -62,7 +62,7 @@ class SalarySlipCard extends StatelessWidget {
 								),
 								const SizedBox(width: 10),
 								ElevatedButton.icon(
-									onPressed: slip.pdfPath != null ? onDeletePdf : null,
+									onPressed: slip.slipId != null ? onDeletePdf : null,
 									icon: const Icon(Icons.delete, size: 18),
 									label: const Text('Delete PDF', style: TextStyle(color: Colors.white)),
 									style: kPremiumButtonStyle(context).copyWith(
@@ -72,10 +72,10 @@ class SalarySlipCard extends StatelessWidget {
 								),
 							],
 						),
-						if (slip.pdfPath != null)
+						if (slip.salarySlipUrl != null)
 							Padding(
 								padding: const EdgeInsets.only(top: 8.0),
-								child: Text('PDF: ${slip.pdfPath}', style: kCaptionTextStyle(context)),
+								child: Text('PDF: ${slip.salarySlipUrl}', style: kCaptionTextStyle(context)),
 							),
 					],
 				),
