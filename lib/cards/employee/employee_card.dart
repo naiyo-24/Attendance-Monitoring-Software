@@ -31,12 +31,12 @@ class EmployeeCard extends StatelessWidget {
                   radius: 28,
                   backgroundColor: kBrown.withAlpha((0.1 * 255).toInt()),
                   backgroundImage: employee['profilePhoto'] != null
-  ? NetworkImage(
-      employee['profilePhoto'].toString().startsWith('http')
-        ? employee['profilePhoto']
-        : baseUrl + (employee['profilePhoto'].toString().startsWith('/') ? employee['profilePhoto'] : '/${employee['profilePhoto']}')
-    )
-  : null,
+                    ? NetworkImage(
+                      employee['profilePhoto'].toString().startsWith('http')
+                      ? employee['profilePhoto']
+                      : baseUrl + (employee['profilePhoto'].toString().startsWith('/') ? employee['profilePhoto'] : '/${employee['profilePhoto']}')
+                    )
+                  : null,
                   child: employee['profilePhoto'] == null
                       ? const Icon(Iconsax.user, color: kBrown, size: 32)
                       : null,

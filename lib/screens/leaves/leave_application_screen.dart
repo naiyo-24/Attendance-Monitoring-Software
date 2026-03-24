@@ -49,18 +49,37 @@ class _LeaveApplicationScreenState extends ConsumerState<LeaveApplicationScreen>
 		}
 	}
 
-	void _filterLeaves(String search, DateTime? date, Employee? employee) {
-		setState(() {
-			filteredLeaves = leavesNotifier.leaves.where((leave) {
-				final matchesSearch = search.isEmpty ||
+	void _filterLeaves(String search, DateTime? date, Employee? employee) async {
+		final authNotifier = ref.read(authProvider);
+		if (employee != null) {
+			// Fetch leaves for the selected employee from backend
+			await leavesNotifier.fetchLeavesByAdminAndEmployee(
+				adminId: authNotifier.user!.adminId!,
+				employee: employee,
+			);
+			setState(() {
+				filteredLeaves = leavesNotifier.leaves.where((leave) {
+					final matchesSearch = search.isEmpty ||
 						leave.reason.toLowerCase().contains(search.toLowerCase()) ||
 						leave.employee.phone.contains(search);
-				final matchesDate = date == null ||
+					final matchesDate = date == null ||
 						(leave.date.year == date.year && leave.date.month == date.month && leave.date.day == date.day);
-				final matchesEmployee = employee == null || leave.employee == employee;
-				return matchesSearch && matchesDate && matchesEmployee;
-			}).toList();
-		});
+					return matchesSearch && matchesDate;
+				}).toList();
+			});
+		} else {
+			// Optionally, fetch all leaves for all employees (or keep as is)
+			setState(() {
+				filteredLeaves = leavesNotifier.leaves.where((leave) {
+					final matchesSearch = search.isEmpty ||
+						leave.reason.toLowerCase().contains(search.toLowerCase()) ||
+						leave.employee.phone.contains(search);
+					final matchesDate = date == null ||
+						(leave.date.year == date.year && leave.date.month == date.month && leave.date.day == date.day);
+					return matchesSearch && matchesDate;
+				}).toList();
+			});
+		}
 	}
 
 	Future<void> _approveLeave(int idx) async {
