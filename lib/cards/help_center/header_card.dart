@@ -21,7 +21,7 @@ class HeaderCard extends StatelessWidget {
 						ClipRRect(
 							borderRadius: BorderRadius.circular(12),
 							child: Image.asset(
-								'assets/logo/attendx24_logo.jpeg',
+								'assets/logo/attendx24_logo.png',
 								width: 72,
 								height: 72,
 								fit: BoxFit.cover,

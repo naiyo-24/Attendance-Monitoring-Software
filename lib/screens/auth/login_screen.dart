@@ -59,7 +59,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(32.0),
                     child: Image.asset(
-                      'assets/logo/attendx24_logo.jpeg',
+                      'assets/logo/attendx24_logo.png',
                       width: 120,
                       height: 120,
                     ),

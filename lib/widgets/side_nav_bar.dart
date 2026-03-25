@@ -19,7 +19,7 @@ class SideNavBar extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                AppLogo(size: 66, assetPath: 'assets/logo/attendx24_logo.jpeg'),
+                AppLogo(size: 66, assetPath: 'assets/logo/attendx24_logo.png'),
                 const SizedBox(width: 16),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,

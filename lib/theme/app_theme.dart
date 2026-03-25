@@ -94,7 +94,7 @@ class AppLogo extends StatelessWidget {
 	final String assetPath;
 	const AppLogo({
 		this.size = 48,
-		this.assetPath = 'assets/logo/attendx24_logo.jpeg',
+		this.assetPath = 'assets/logo/attendx24_logo.png',
 		super.key,
 	});
 
