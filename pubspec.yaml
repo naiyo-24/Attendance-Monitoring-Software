@@ -45,6 +45,7 @@ dependencies:
   url_launcher: ^6.3.2
   dio: ^5.9.2
   pretty_dio_logger: ^1.4.0
+  location_picker_flutter_map: ^4.1.0
 
 dev_dependencies:
   flutter_test:

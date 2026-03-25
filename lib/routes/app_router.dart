@@ -6,6 +6,7 @@ import '../screens/auth/splash_screen.dart';
 import '../screens/auth/login_screen.dart';
 import '../screens/dashboard/dashboard_screen.dart';
 import '../screens/location_matrix/location_matrix_screen.dart';
+import '../screens/location_matrix/map_picker_screen.dart';
 import '../screens/employee/employee_screen.dart';
 
 import '../screens/holiday/holiday_screen.dart';
@@ -14,6 +15,14 @@ import '../screens/leaves/leave_application_screen.dart';
 final GoRouter appRouter = GoRouter(
   initialLocation: '/splash',
   routes: [
+        GoRoute(
+          path: MapPickerScreen.routeName,
+          builder: (context, state) {
+            final lat = state.uri.queryParameters['lat'] != null ? double.tryParse(state.uri.queryParameters['lat']!) : null;
+            final lng = state.uri.queryParameters['lng'] != null ? double.tryParse(state.uri.queryParameters['lng']!) : null;
+            return MapPickerScreen(initialLat: lat, initialLng: lng);
+          },
+        ),
     GoRoute(
       path: '/splash',
       builder: (context, state) => const SplashScreen(),
