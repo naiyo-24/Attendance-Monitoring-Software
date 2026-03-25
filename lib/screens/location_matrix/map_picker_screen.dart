@@ -29,8 +29,8 @@ class _MapPickerScreenState extends State<MapPickerScreen> {
       body: FlutterLocationPicker(
         userAgent: 'AttendanceApp/1.0.0 (contact@yourdomain.com)',
         initPosition: widget.initialLat != null && widget.initialLng != null
-            ? LatLong(widget.initialLat!, widget.initialLng!)
-            : const LatLong(20.5937, 78.9629),
+          ? LatLong(widget.initialLat!, widget.initialLng!)
+          : const LatLong(22.5667, 88.3667), // Kolkata Esplanade
         showCurrentLocationPointer: true,
         onPicked: (pickedData) {
           setState(() {
