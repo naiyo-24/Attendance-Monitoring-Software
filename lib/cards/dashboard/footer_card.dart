@@ -9,7 +9,7 @@ class HomeFooter extends StatelessWidget {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Image.asset(
-        'assets/logo/logo_no_bg.png',
+        'assets/logo/naiyo24_logo.png',
         fit: BoxFit.fitWidth,
         width: double.infinity,
         alignment: Alignment.center,

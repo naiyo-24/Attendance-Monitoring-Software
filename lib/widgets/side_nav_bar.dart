@@ -15,24 +15,24 @@ class SideNavBar extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           DrawerHeader(
-            decoration: const BoxDecoration(color: kPink),
+            decoration: const BoxDecoration(color: kBlack),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                AppLogo(size: 66, assetPath: 'assets/logo/logo_no_bg.png'),
+                AppLogo(size: 66, assetPath: 'assets/logo/naiyo24_logo.png'),
                 const SizedBox(width: 16),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Admin Panel',
+                      'Atendx24',
                       style: kHeaderTextStyle(context).copyWith(color: kWhite, fontSize: 24),
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      'Welcome!',
-                      style: kTaglineTextStyle(
+                      'Attendance \nMonitoring System',
+                      style: kCaptionTextStyle(
                         context,
                       ).copyWith(color: kWhiteGrey),
                     ),

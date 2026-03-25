@@ -28,7 +28,7 @@ class CountCards extends StatelessWidget {
 						label: 'Holidays',
 						value: count.holidays,
 						icon: Iconsax.calendar,
-						gradient: const LinearGradient(colors: [kPink, kerror]),
+						gradient: const LinearGradient(colors: [kPink, kBlack]),
 						iconColor: kWhite,
 					),
 					_buildCard(

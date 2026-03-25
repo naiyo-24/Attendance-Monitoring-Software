@@ -82,7 +82,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 										child: Padding(
 											padding: const EdgeInsets.all(32.0),
 											child: Image.asset(
-												'assets/logo/logo_no_bg.png',
+												'assets/logo/naiyo24_logo.png',
 												width: 180,
 												height: 180,
 											),
