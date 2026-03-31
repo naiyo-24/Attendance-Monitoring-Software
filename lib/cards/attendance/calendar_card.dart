@@ -1,9 +1,11 @@
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../../notifiers/attendance_notifier.dart';
 import '../../models/attendance.dart';
 import 'attendance_details_card.dart';
+import '../../theme/app_theme.dart';
 
 class CalendarCard extends StatelessWidget {
 	final int adminId;
@@ -20,13 +22,40 @@ class CalendarCard extends StatelessWidget {
 		}
 
 		return Card(
+			color: kWhite,
+			elevation: 3,
+			shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
 			child: Padding(
-				padding: const EdgeInsets.all(8.0),
+				padding: const EdgeInsets.symmetric(vertical: 14.0, horizontal: 4.0),
 				child: TableCalendar<Attendance>(
 					firstDay: DateTime.utc(2020, 1, 1),
 					lastDay: DateTime.utc(2100, 12, 31),
 					focusedDay: DateTime.now(),
 					eventLoader: (day) => events[DateTime(day.year, day.month, day.day)] ?? [],
+					calendarStyle: CalendarStyle(
+						todayDecoration: BoxDecoration(
+							color: kBrown.withOpacity(0.15),
+							shape: BoxShape.circle,
+						),
+						selectedDecoration: BoxDecoration(
+							color: kBrown,
+							shape: BoxShape.circle,
+						),
+						markerDecoration: BoxDecoration(
+							color: kGreen,
+							shape: BoxShape.circle,
+						),
+						weekendTextStyle: kDescriptionTextStyle(context).copyWith(color: kPink),
+						defaultTextStyle: kDescriptionTextStyle(context),
+						outsideTextStyle: kDescriptionTextStyle(context).copyWith(color: kPink.withOpacity(0.5)),
+					),
+					headerStyle: HeaderStyle(
+						titleTextStyle: kHeaderTextStyle(context).copyWith(fontSize: 18),
+						formatButtonVisible: false,
+						leftChevronIcon: Icon(Icons.chevron_left, color: kBrown),
+						rightChevronIcon: Icon(Icons.chevron_right, color: kBrown),
+						titleCentered: true,
+					),
 					calendarBuilders: CalendarBuilders(
 						markerBuilder: (context, date, events) {
 							if (events.isNotEmpty) {
@@ -41,7 +70,7 @@ class CalendarCard extends StatelessWidget {
 												height: 6,
 												decoration: BoxDecoration(
 													shape: BoxShape.circle,
-													color: Colors.blue,
+													color: kGreen,
 												),
 											),
 										),
@@ -58,6 +87,7 @@ class CalendarCard extends StatelessWidget {
 								context: context,
 								builder: (_) => AttendanceDetailsCard(attendance: attList.first, adminId: adminId),
 								isScrollControlled: true,
+								backgroundColor: Colors.transparent,
 							);
 						}
 					},
