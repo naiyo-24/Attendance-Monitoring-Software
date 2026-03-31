@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../theme/app_theme.dart';
 import '../../providers/auth_provider.dart';
 import '../../notifiers/location_matrix_notifier.dart';
@@ -77,6 +78,26 @@ class MatrixCard extends ConsumerWidget {
                         ],
                       ),
                       Text(longitude, style: kHeaderTextStyle(context).copyWith(fontSize: 18)),
+                      const SizedBox(height: 12),
+                      ElevatedButton.icon(
+                        style: kPremiumButtonStyle(context).copyWith(
+                          backgroundColor: WidgetStateProperty.all(kGreen),
+                          foregroundColor: WidgetStateProperty.all(kWhiteGrey),
+                          padding: WidgetStateProperty.all(const EdgeInsets.symmetric(vertical: 10, horizontal: 18)),
+                        ),
+                        icon: const Icon(Iconsax.location, size: 18),
+                        label: const Text('View Location'),
+                        onPressed: () async {
+                          final lat = double.tryParse(latitude);
+                          final lng = double.tryParse(longitude);
+                          if (lat != null && lng != null) {
+                            final url = Uri.parse('https://www.google.com/maps/search/?api=1&query=$lat,$lng');
+                            if (await canLaunchUrl(url)) {
+                              await launchUrl(url, mode: LaunchMode.externalApplication);
+                            }
+                          }
+                        },
+                      ),
                     ],
                   ),
                 ),
