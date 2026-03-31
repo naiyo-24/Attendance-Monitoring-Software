@@ -1,3 +1,4 @@
+import '../screens/attendance/attendance_screen.dart';
 import '../screens/help_center/help_center_screen.dart';
 import '../screens/notification/notification_screen.dart';
 import '../screens/salary_slip/salary_slip_screen.dart';
@@ -23,6 +24,10 @@ final GoRouter appRouter = GoRouter(
             return MapPickerScreen(initialLat: lat, initialLng: lng);
           },
         ),
+    GoRoute(
+      path: '/attendance',
+      builder: (context, state) => const AttendanceScreen(),
+    ),
     GoRoute(
       path: '/splash',
       builder: (context, state) => const SplashScreen(),

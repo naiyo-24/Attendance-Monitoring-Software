@@ -57,6 +57,12 @@ class SideNavBar extends StatelessWidget {
           _drawerItem(
             context,
             Iconsax.calendar,
+            'Attendance Records',
+            '/attendance',
+          ),
+          _drawerItem(
+            context,
+            Iconsax.calendar,
             'Holiday List',
             '/holiday-list',
           ),
