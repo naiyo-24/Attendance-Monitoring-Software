@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 
 import '../../cards/employee/add_edit_employee_card.dart';
 import '../../cards/employee/employee_card.dart';
@@ -121,81 +122,107 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
         title: 'Employees',
         subtitle: 'Manage & onboard employees',
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                style: kPremiumButtonStyle(context).copyWith(
-                  backgroundColor: WidgetStateProperty.all(kGreen),
-                  foregroundColor: WidgetStateProperty.all(kWhite),
-                  padding: WidgetStateProperty.all(const EdgeInsets.symmetric(vertical: 18)),
-                  textStyle: WidgetStateProperty.all(
-                    kHeaderTextStyle(context).copyWith(fontSize: 18),
-                  ),
-                ),
-                icon: const Icon(Icons.person_add_alt_1_rounded, size: 26),
-                label: const Text('Onboard a New Employee'),
-                onPressed: () => _openAddEditEmployee(),
-              ),
-            ),
-            const SizedBox(height: 18),
-            TextField(
-              decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.search, color: kBrown),
-                hintText: 'Search by name or phone no.',
-                hintStyle: kTaglineTextStyle(context).copyWith(color: kBrown.withAlpha((0.7 * 255).toInt())),
-                filled: true,
-                fillColor: kWhiteGrey,
-                contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 18),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(32),
-                  borderSide: BorderSide.none,
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(32),
-                  borderSide: BorderSide.none,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(32),
-                  borderSide: const BorderSide(color: kGreen, width: 2),
-                ),
-              ),
-              style: kDescriptionTextStyle(context).copyWith(fontSize: 16),
-              onChanged: (val) => setState(() => searchQuery = val),
-            ),
-            const SizedBox(height: 24),
-            Expanded(
-              child: notifier.isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : ListView.separated(
-                      itemCount: filteredEmployees.length,
-                      separatorBuilder: (_, _) => const SizedBox(height: 16),
-                      itemBuilder: (context, index) => EmployeeCard(
-                        employee: {
-                          'name': filteredEmployees[index].name,
-                          'phone': filteredEmployees[index].phone,
-                          'email': filteredEmployees[index].email,
-                          'password': filteredEmployees[index].password,
-                          'bankName': filteredEmployees[index].bankName,
-                          'branchName': filteredEmployees[index].branchName,
-                          'accountNo': filteredEmployees[index].accountNo,
-                          'ifsc': filteredEmployees[index].ifsc,
-                          'designation': filteredEmployees[index].designation,
-                          'address': filteredEmployees[index].address,
-                          'profilePhoto': filteredEmployees[index].profilePhoto,
-                        },
-                        onEdit: () => _openAddEditEmployee(
-                          employee: filteredEmployees[index],
+      body: Container(
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [kWhite, kWhiteGrey],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        style: kPremiumButtonStyle(context).copyWith(
+                          backgroundColor: WidgetStateProperty.all(kGreen),
+                          foregroundColor: WidgetStateProperty.all(kWhite),
+                          padding: WidgetStateProperty.all(const EdgeInsets.symmetric(vertical: 20)),
+                          textStyle: WidgetStateProperty.all(
+                            kHeaderTextStyle(context).copyWith(fontSize: 18),
+                          ),
+                          elevation: WidgetStateProperty.all(6),
                         ),
-                        onDelete: () => _deleteEmployee(filteredEmployees[index].employeeId!),
+                        icon: const Icon(Iconsax.user_add, size: 26),
+                        label: const Text('Onboard a New Employee'),
+                        onPressed: () => _openAddEditEmployee(),
                       ),
                     ),
-            ),
-          ],
+                  ],
+                ),
+              ),
+              const SizedBox(height: 18),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Material(
+                  elevation: 0,
+                  borderRadius: BorderRadius.circular(24),
+                  color: Colors.transparent,
+                  child: TextField(
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Iconsax.search_normal, color: kBrown),
+                      hintText: 'Search by name or phone no.',
+                      hintStyle: kTaglineTextStyle(context).copyWith(color: kBrown.withAlpha((0.7 * 255).toInt())),
+                      filled: true,
+                      fillColor: kWhiteGrey.withOpacity(0.8),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 18),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(24),
+                        borderSide: BorderSide.none,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(24),
+                        borderSide: BorderSide.none,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(24),
+                        borderSide: const BorderSide(color: kGreen, width: 2),
+                      ),
+                    ),
+                    style: kDescriptionTextStyle(context).copyWith(fontSize: 16),
+                    onChanged: (val) => setState(() => searchQuery = val),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+              Expanded(
+                child: notifier.isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : ListView.separated(
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 0),
+                        itemCount: filteredEmployees.length,
+                        separatorBuilder: (_, __) => const SizedBox(height: 20),
+                        itemBuilder: (context, index) => EmployeeCard(
+                          employee: {
+                            'name': filteredEmployees[index].name,
+                            'phone': filteredEmployees[index].phone,
+                            'email': filteredEmployees[index].email,
+                            'password': filteredEmployees[index].password,
+                            'bankName': filteredEmployees[index].bankName,
+                            'branchName': filteredEmployees[index].branchName,
+                            'accountNo': filteredEmployees[index].accountNo,
+                            'ifsc': filteredEmployees[index].ifsc,
+                            'designation': filteredEmployees[index].designation,
+                            'address': filteredEmployees[index].address,
+                            'profilePhoto': filteredEmployees[index].profilePhoto,
+                          },
+                          onEdit: () => _openAddEditEmployee(
+                            employee: filteredEmployees[index],
+                          ),
+                          onDelete: () => _deleteEmployee(filteredEmployees[index].employeeId!),
+                        ),
+                      ),
+              ),
+            ],
+          ),
         ),
       ),
     );

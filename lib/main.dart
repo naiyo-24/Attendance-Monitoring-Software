@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'Attendance Admin Panel',
+      title: 'AttendX24 Admin Panel',
       theme: appTheme(context),
       routerConfig: appRouter,
       debugShowCheckedModeBanner: false,

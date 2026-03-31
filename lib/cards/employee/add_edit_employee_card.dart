@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 import '../../theme/app_theme.dart';
 
 class AddEditEmployeeCard extends StatefulWidget {
@@ -60,77 +61,128 @@ class _AddEditEmployeeCardState extends State<AddEditEmployeeCard> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(24.0),
-      child: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                widget.employee == null ? 'Onboard New Employee' : 'Edit Employee',
-                style: kHeaderTextStyle(context),
-              ),
-              const SizedBox(height: 18),
-              _buildTextField(_nameController, 'Name'),
-              const SizedBox(height: 12),
-              _buildTextField(_phoneController, 'Phone No.'),
-              const SizedBox(height: 12),
-              _buildTextField(_emailController, 'Email'),
-              const SizedBox(height: 12),
-              _buildTextField(_passwordController, 'Password', obscure: true),
-              const SizedBox(height: 12),
-              _buildTextField(_bankNameController, 'Bank Name'),
-              const SizedBox(height: 12),
-              _buildTextField(_branchNameController, 'Branch Name'),
-              const SizedBox(height: 12),
-              _buildTextField(_accountNoController, 'Account No.'),
-              const SizedBox(height: 12),
-              _buildTextField(_ifscController, 'IFSC Code'),
-              const SizedBox(height: 12),
-              _buildTextField(_designationController, 'Designation'),
-              const SizedBox(height: 12),
-              _buildTextField(_addressController, 'Address'),
-              const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: kPremiumButtonStyle(context),
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      widget.onSave({
-                        'name': _nameController.text,
-                        'phone': _phoneController.text,
-                        'email': _emailController.text,
-                        'password': _passwordController.text,
-                        'bankName': _bankNameController.text,
-                        'branchName': _branchNameController.text,
-                        'accountNo': _accountNoController.text,
-                        'ifsc': _ifscController.text,
-                        'designation': _designationController.text,
-                        'address': _addressController.text,
-                        'profilePhoto': null,
-                      });
-                    }
-                  },
-                  child: Text(widget.employee == null ? 'Onboard' : 'Save'),
-                ),
+      padding: EdgeInsets.only(
+        left: 0,
+        right: 0,
+        top: 12,
+        bottom: MediaQuery.of(context).viewInsets.bottom + 12,
+      ),
+      child: Center(
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 480),
+          decoration: BoxDecoration(
+            color: kWhite.withOpacity(0.85),
+            borderRadius: BorderRadius.circular(28),
+            boxShadow: [
+              BoxShadow(
+                color: kBrown.withOpacity(0.09),
+                blurRadius: 32,
+                offset: const Offset(0, 12),
               ),
             ],
+            border: Border.all(color: kWhiteGrey, width: 1.5),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 28),
+            child: SingleChildScrollView(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          widget.employee == null ? Iconsax.user_add : Iconsax.edit,
+                          color: kGreen,
+                          size: 28,
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          widget.employee == null ? 'Onboard New Employee' : 'Edit Employee',
+                          style: kHeaderTextStyle(context).copyWith(fontSize: 22),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 22),
+                    _buildTextField(_nameController, 'Name', icon: Iconsax.user),
+                    const SizedBox(height: 14),
+                    _buildTextField(_phoneController, 'Phone No.', icon: Iconsax.call),
+                    const SizedBox(height: 14),
+                    _buildTextField(_emailController, 'Email', icon: Iconsax.sms),
+                    const SizedBox(height: 14),
+                    _buildTextField(_passwordController, 'Password', icon: Iconsax.key, obscure: true),
+                    const SizedBox(height: 14),
+                    _buildTextField(_bankNameController, 'Bank Name', icon: Iconsax.bank),
+                    const SizedBox(height: 14),
+                    _buildTextField(_branchNameController, 'Branch Name', icon: Iconsax.building_3),
+                    const SizedBox(height: 14),
+                    _buildTextField(_accountNoController, 'Account No.', icon: Iconsax.card),
+                    const SizedBox(height: 14),
+                    _buildTextField(_ifscController, 'IFSC Code', icon: Iconsax.code),
+                    const SizedBox(height: 14),
+                    _buildTextField(_designationController, 'Designation', icon: Iconsax.user_tag),
+                    const SizedBox(height: 14),
+                    _buildTextField(_addressController, 'Address', icon: Iconsax.location),
+                    const SizedBox(height: 28),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        style: kPremiumButtonStyle(context).copyWith(
+                          backgroundColor: WidgetStateProperty.all(kGreen),
+                          foregroundColor: WidgetStateProperty.all(kWhite),
+                          padding: WidgetStateProperty.all(const EdgeInsets.symmetric(vertical: 18)),
+                        ),
+                        icon: Icon(widget.employee == null ? Iconsax.user_add : Iconsax.save_2, size: 22),
+                        label: Text(widget.employee == null ? 'Onboard' : 'Save'),
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            widget.onSave({
+                              'name': _nameController.text,
+                              'phone': _phoneController.text,
+                              'email': _emailController.text,
+                              'password': _passwordController.text,
+                              'bankName': _bankNameController.text,
+                              'branchName': _branchNameController.text,
+                              'accountNo': _accountNoController.text,
+                              'ifsc': _ifscController.text,
+                              'designation': _designationController.text,
+                              'address': _addressController.text,
+                              'profilePhoto': null,
+                            });
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String label, {bool obscure = false}) {
+  Widget _buildTextField(TextEditingController controller, String label, {IconData? icon, bool obscure = false}) {
     return TextFormField(
       controller: controller,
       obscureText: obscure,
+      style: kDescriptionTextStyle(context).copyWith(fontSize: 16),
       decoration: InputDecoration(
         labelText: label,
-        border: const OutlineInputBorder(),
+        floatingLabelBehavior: FloatingLabelBehavior.auto,
+        prefixIcon: icon != null ? Icon(icon, color: kBrown, size: 22) : null,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(18),
+          borderSide: BorderSide.none,
+        ),
+        filled: true,
+        fillColor: kWhiteGrey.withOpacity(0.7),
+        contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 18),
+        labelStyle: kTaglineTextStyle(context).copyWith(color: kBrown.withOpacity(0.8)),
+        hintStyle: kCaptionTextStyle(context).copyWith(color: kBrown.withOpacity(0.6)),
       ),
       validator: (val) => val == null || val.isEmpty ? 'Required' : null,
     );
