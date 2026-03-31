@@ -47,3 +47,10 @@ String deleteSalarySlipEndpoint(int slipId) => '/salary_slip/$slipId';
 // Leave Request endpoints
 String getLeaveRequestsByAdminAndEmployeeEndpoint(int adminId, int employeeId) => '/get-all/leave_requests/admin/$adminId/employee/$employeeId';
 String updateLeaveRequestByIdEndpoint(int leaveId) => '/update/leave_requests/$leaveId';
+
+// Attendance endpoints
+String getAttendanceByAdminAndEmployeeEndpoint(int adminId, int employeeId) => '/attendance/admin/$adminId/employee/$employeeId';
+String updateAttendanceStatusEndpoint(int attendanceId, int adminId) => '/attendance/$attendanceId/admin/$adminId/status';
+
+// Break Time endpoints
+String getBreaksByAdminAndEmployeeEndpoint(int adminId, int employeeId) => '/break-time/admin/$adminId/employee/$employeeId';
