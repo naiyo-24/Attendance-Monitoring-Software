@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -29,37 +31,78 @@ class MatrixCard extends ConsumerWidget {
         ref.read(locationMatrixNotifierProvider).fetchMatrices(adminId);
       });
     }
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      elevation: 3,
-      color: kWhiteGrey,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Latitude', style: kTaglineTextStyle(context)),
-                  Text(latitude, style: kHeaderTextStyle(context).copyWith(fontSize: 18)),
-                  const SizedBox(height: 6),
-                  Text('Longitude', style: kTaglineTextStyle(context)),
-                  Text(longitude, style: kHeaderTextStyle(context).copyWith(fontSize: 18)),
-                ],
-              ),
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(24),
+        color: kWhite.withOpacity(0.7),
+        boxShadow: [
+          BoxShadow(
+            color: kBrown.withOpacity(0.07),
+            blurRadius: 24,
+            offset: const Offset(0, 8),
+          ),
+        ],
+        border: Border.all(color: kWhiteGrey, width: 1.5),
+        backgroundBlendMode: BlendMode.overlay,
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(24),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 22),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(Iconsax.location, color: kGreen, size: 32),
+                const SizedBox(width: 18),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Iconsax.global, color: kBrown, size: 18),
+                          const SizedBox(width: 6),
+                          Text('Latitude', style: kTaglineTextStyle(context).copyWith(fontSize: 15)),
+                        ],
+                      ),
+                      Text(latitude, style: kHeaderTextStyle(context).copyWith(fontSize: 18)),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Icon(Iconsax.global, color: kBrown, size: 18),
+                          const SizedBox(width: 6),
+                          Text('Longitude', style: kTaglineTextStyle(context).copyWith(fontSize: 15)),
+                        ],
+                      ),
+                      Text(longitude, style: kHeaderTextStyle(context).copyWith(fontSize: 18)),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Material(
+                  color: Colors.transparent,
+                  child: Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Iconsax.edit_2, color: kGreen, size: 26),
+                        onPressed: onEdit,
+                        tooltip: 'Edit',
+                        splashRadius: 24,
+                      ),
+                      IconButton(
+                        icon: const Icon(Iconsax.trash, color: kerror, size: 26),
+                        onPressed: onDelete,
+                        tooltip: 'Delete',
+                        splashRadius: 24,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            IconButton(
-              icon: const Icon(Iconsax.edit, color: kGreen, size: 26),
-              onPressed: onEdit,
-              tooltip: 'Edit',
-            ),
-            IconButton(
-              icon: const Icon(Iconsax.trash, color: kerror, size: 26),
-              onPressed: onDelete,
-              tooltip: 'Delete',
-            ),
-          ],
+          ),
         ),
       ),
     );

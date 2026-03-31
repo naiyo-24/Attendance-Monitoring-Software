@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:location_picker_flutter_map/location_picker_flutter_map.dart';
 
+import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';
 import '../../widgets/side_nav_bar.dart';
 
@@ -26,20 +27,32 @@ class _MapPickerScreenState extends State<MapPickerScreen> {
         title: 'Location Matrix',
         subtitle: 'Manage allowed locations',
       ),
-      body: FlutterLocationPicker(
-        userAgent: 'AttendanceApp/1.0.0 (contact@yourdomain.com)',
-        initPosition: widget.initialLat != null && widget.initialLng != null
-          ? LatLong(widget.initialLat!, widget.initialLng!)
-          : const LatLong(22.5667, 88.3667), // Kolkata Esplanade
-        showCurrentLocationPointer: true,
-        onPicked: (pickedData) {
-          setState(() {
-            pickedLocation = pickedData.latLong;
-          });
-        },
+      body: Container(
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [kWhite, kWhiteGrey],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: FlutterLocationPicker(
+          userAgent: 'AttendanceApp/1.0.0 (contact@yourdomain.com)',
+          initPosition: widget.initialLat != null && widget.initialLng != null
+              ? LatLong(widget.initialLat!, widget.initialLng!)
+              : const LatLong(22.5667, 88.3667), // Kolkata Esplanade
+          showCurrentLocationPointer: true,
+          onPicked: (pickedData) {
+            setState(() {
+              pickedLocation = pickedData.latLong;
+            });
+          },
+        ),
       ),
       floatingActionButton: pickedLocation != null
           ? FloatingActionButton.extended(
+              backgroundColor: kGreen,
+              foregroundColor: kWhite,
               onPressed: () {
                 Navigator.of(context).pop({
                   'latitude': pickedLocation!.latitude,

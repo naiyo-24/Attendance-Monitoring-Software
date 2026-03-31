@@ -199,7 +199,7 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
                     : ListView.separated(
                         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 0),
                         itemCount: filteredEmployees.length,
-                        separatorBuilder: (_, __) => const SizedBox(height: 20),
+                        separatorBuilder: (_, _) => const SizedBox(height: 20),
                         itemBuilder: (context, index) => EmployeeCard(
                           employee: {
                             'name': filteredEmployees[index].name,

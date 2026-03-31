@@ -1,6 +1,7 @@
 import 'package:attendance_admin_panel/widgets/side_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:iconsax/iconsax.dart';
 import '../../models/location_matrix.dart';
 import '../../widgets/app_bar.dart';
 import '../../theme/app_theme.dart';
@@ -32,41 +33,37 @@ class _LocationMatrixScreenState extends ConsumerState<LocationMatrixScreen> {
       await showModalBottomSheet(
         context: context,
         isScrollControlled: true,
+        backgroundColor: Colors.transparent,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
-        builder: (context) => Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-          ),
-          child: AddEditMatrixCard(
-            latitude: matrix?.latitude.toString(),
-            longitude: matrix?.longitude.toString(),
-            onSave: (lat, lng) async {
-              if (adminId == null) return;
-              if (index != null && matrix != null) {
-                await ref.read(locationMatrixNotifierProvider).updateMatrix(
-                  LocationMatrix(
-                    locationMatrixId: matrix.locationMatrixId,
-                    adminId: adminId,
-                    latitude: double.tryParse(lat) ?? 0.0,
-                    longitude: double.tryParse(lng) ?? 0.0,
-                  ),
-                  adminId,
-                );
-              } else {
-                await ref.read(locationMatrixNotifierProvider).addMatrix(
-                  LocationMatrix(
-                    adminId: adminId,
-                    latitude: double.tryParse(lat) ?? 0.0,
-                    longitude: double.tryParse(lng) ?? 0.0,
-                  ),
-                );
-              }
-              if (!context.mounted) return;
-              Navigator.of(context).pop();
-            },
-          ),
+        builder: (context) => AddEditMatrixCard(
+          latitude: matrix?.latitude.toString(),
+          longitude: matrix?.longitude.toString(),
+          onSave: (lat, lng) async {
+            if (adminId == null) return;
+            if (index != null && matrix != null) {
+              await ref.read(locationMatrixNotifierProvider).updateMatrix(
+                LocationMatrix(
+                  locationMatrixId: matrix.locationMatrixId,
+                  adminId: adminId,
+                  latitude: double.tryParse(lat) ?? 0.0,
+                  longitude: double.tryParse(lng) ?? 0.0,
+                ),
+                adminId,
+              );
+            } else {
+              await ref.read(locationMatrixNotifierProvider).addMatrix(
+                LocationMatrix(
+                  adminId: adminId,
+                  latitude: double.tryParse(lat) ?? 0.0,
+                  longitude: double.tryParse(lng) ?? 0.0,
+                ),
+              );
+            }
+            if (!context.mounted) return;
+            Navigator.of(context).pop();
+          },
         ),
       );
     }
@@ -83,54 +80,72 @@ class _LocationMatrixScreenState extends ConsumerState<LocationMatrixScreen> {
         title: 'Location Matrix',
         subtitle: 'Manage allowed locations',
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                style: kPremiumButtonStyle(context).copyWith(
-                  backgroundColor: WidgetStateProperty.all(kGreen),
-                  foregroundColor: WidgetStateProperty.all(kWhite),
-                  padding: WidgetStateProperty.all(const EdgeInsets.symmetric(vertical: 18)),
-                  textStyle: WidgetStateProperty.all(
-                    kHeaderTextStyle(context).copyWith(fontSize: 18),
+      body: Container(
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [kWhite, kWhiteGrey],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        style: kPremiumButtonStyle(context).copyWith(
+                          backgroundColor: WidgetStateProperty.all(kGreen),
+                          foregroundColor: WidgetStateProperty.all(kWhite),
+                          padding: WidgetStateProperty.all(const EdgeInsets.symmetric(vertical: 20)),
+                          textStyle: WidgetStateProperty.all(
+                            kHeaderTextStyle(context).copyWith(fontSize: 18),
+                          ),
+                          elevation: WidgetStateProperty.all(6),
+                        ),
+                        icon: const Icon(Iconsax.add, size: 26),
+                        label: const Text('Create Location Matrix'),
+                        onPressed: () => openAddEditMatrix(),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+              Expanded(
+                child: matrixNotifier.isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : ListView.separated(
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 0),
+                        itemCount: matrixNotifier.matrices.length,
+                        separatorBuilder: (_, __) => const SizedBox(height: 20),
+                        itemBuilder: (context, index) {
+                          final matrix = matrixNotifier.matrices[index];
+                          return MatrixCard(
+                            latitude: matrix.latitude.toString(),
+                            longitude: matrix.longitude.toString(),
+                            onEdit: () => openAddEditMatrix(index: index),
+                            onDelete: () => deleteMatrix(index),
+                          );
+                        },
+                      ),
+              ),
+              if (matrixNotifier.error != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 12.0),
+                  child: Text(
+                    matrixNotifier.error!,
+                    style: TextStyle(color: kerror),
                   ),
                 ),
-                icon: const Icon(Icons.add_location_alt_rounded, size: 26),
-                label: const Text('Create Location Matrix'),
-                onPressed: () => openAddEditMatrix(),
-              ),
-            ),
-            const SizedBox(height: 24),
-            Expanded(
-              child: matrixNotifier.isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : ListView.separated(
-                      itemCount: matrixNotifier.matrices.length,
-                      separatorBuilder: (_, _) => const SizedBox(height: 16),
-                      itemBuilder: (context, index) {
-                        final matrix = matrixNotifier.matrices[index];
-                        return MatrixCard(
-                          latitude: matrix.latitude.toString(),
-                          longitude: matrix.longitude.toString(),
-                          onEdit: () => openAddEditMatrix(index: index),
-                          onDelete: () => deleteMatrix(index),
-                        );
-                      },
-                    ),
-            ),
-            if (matrixNotifier.error != null)
-              Padding(
-                padding: const EdgeInsets.only(top: 12.0),
-                child: Text(
-                  matrixNotifier.error!,
-                  style: TextStyle(color: kerror),
-                ),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );

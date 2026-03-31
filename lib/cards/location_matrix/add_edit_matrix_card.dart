@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 import '../../screens/location_matrix/map_picker_screen.dart';
 import '../../theme/app_theme.dart';
 
@@ -52,68 +53,126 @@ class _AddEditMatrixCardState extends State<AddEditMatrixCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(24.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            widget.latitude == null
-                ? 'Create Location Matrix'
-                : 'Edit Location Matrix',
-            style: kHeaderTextStyle(context),
+    // To remove the white background above the bottom sheet, ensure you set
+    // backgroundColor: Colors.transparent in showModalBottomSheet.
+    // This widget itself should not have any top padding or background outside the card.
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: FractionallySizedBox(
+        widthFactor: 1,
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 420, minHeight: 0, maxHeight: 320),
+          decoration: BoxDecoration(
+            color: kWhite.withOpacity(0.95),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+            boxShadow: [
+              BoxShadow(
+                color: kBrown.withOpacity(0.09),
+                blurRadius: 32,
+                offset: const Offset(0, 12),
+              ),
+            ],
+            border: Border.all(color: kWhiteGrey, width: 1.5),
           ),
-          const SizedBox(height: 18),
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Latitude', style: kTaglineTextStyle(context)),
-                    Text(
-                      _latitude?.toStringAsFixed(6) ?? '-',
-                      style: kHeaderTextStyle(context).copyWith(fontSize: 16),
+          child: Padding(
+            padding: EdgeInsets.only(
+              left: 24,
+              right: 24,
+              top: 18,
+              bottom: MediaQuery.of(context).viewInsets.bottom + 8,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    margin: const EdgeInsets.only(bottom: 14),
+                    decoration: BoxDecoration(
+                      color: kBrown.withOpacity(0.18),
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    const SizedBox(height: 8),
-                    Text('Longitude', style: kTaglineTextStyle(context)),
+                  ),
+                ),
+                Row(
+                  children: [
+                    Icon(widget.latitude == null ? Iconsax.add : Iconsax.edit, color: kGreen, size: 22),
+                    const SizedBox(width: 8),
                     Text(
-                      _longitude?.toStringAsFixed(6) ?? '-',
-                      style: kHeaderTextStyle(context).copyWith(fontSize: 16),
+                      widget.latitude == null ? 'Create Location Matrix' : 'Edit Location Matrix',
+                      style: kHeaderTextStyle(context).copyWith(fontSize: 18),
                     ),
                   ],
                 ),
-              ),
-              ElevatedButton.icon(
-                style: kPremiumButtonStyle(context).copyWith(
-                  padding: WidgetStateProperty.all(
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                const SizedBox(height: 14),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(Iconsax.global, color: kBrown, size: 16),
+                              const SizedBox(width: 4),
+                              Text('Latitude', style: kTaglineTextStyle(context).copyWith(fontSize: 14)),
+                            ],
+                          ),
+                          Text(
+                            _latitude?.toStringAsFixed(6) ?? '-',
+                            style: kHeaderTextStyle(context).copyWith(fontSize: 14),
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Icon(Iconsax.global, color: kBrown, size: 16),
+                              const SizedBox(width: 4),
+                              Text('Longitude', style: kTaglineTextStyle(context).copyWith(fontSize: 14)),
+                            ],
+                          ),
+                          Text(
+                            _longitude?.toStringAsFixed(6) ?? '-',
+                            style: kHeaderTextStyle(context).copyWith(fontSize: 14),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    ElevatedButton.icon(
+                      style: kPremiumButtonStyle(context).copyWith(
+                        padding: WidgetStateProperty.all(
+                          const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                        ),
+                      ),
+                      onPressed: _pickLocation,
+                      icon: const Icon(Iconsax.map, size: 18),
+                      label: const Text('Pick'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 18),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    style: kPremiumButtonStyle(context),
+                    icon: Icon(widget.latitude == null ? Iconsax.add : Iconsax.save_2, size: 18),
+                    label: Text(widget.latitude == null ? 'Create' : 'Save'),
+                    onPressed: (_latitude != null && _longitude != null)
+                        ? () {
+                            widget.onSave(
+                              _latitude.toString(),
+                              _longitude.toString(),
+                            );
+                          }
+                        : null,
                   ),
                 ),
-                onPressed: _pickLocation,
-                icon: const Icon(Icons.map),
-                label: const Text('Pick on Map'),
-              ),
-            ],
-          ),
-          const SizedBox(height: 24),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              style: kPremiumButtonStyle(context),
-              onPressed: (_latitude != null && _longitude != null)
-                  ? () {
-                      widget.onSave(
-                        _latitude.toString(),
-                        _longitude.toString(),
-                      );
-                    }
-                  : null,
-              child: Text(widget.latitude == null ? 'Create' : 'Save'),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
