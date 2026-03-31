@@ -4,7 +4,11 @@ import '../../models/attendance.dart';
 
 import '../../notifiers/attendance_notifier.dart';
 import '../../services/api_url.dart';
+
 import '../../theme/app_theme.dart';
+import 'break_time_details_card.dart';
+import '../../services/break_time_services.dart';
+import '../../models/break_time.dart';
 
 class AttendanceDetailsCard extends StatelessWidget {
 	final Attendance attendance;
@@ -134,6 +138,57 @@ class AttendanceDetailsCard extends StatelessWidget {
 											),
 										),
 									],
+								),
+								const SizedBox(height: 16),
+								Center(
+									child: OutlinedButton(
+										style: OutlinedButton.styleFrom(
+											foregroundColor: kBrown,
+											side: BorderSide(color: kBrown.withOpacity(0.4)),
+											shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+											padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+											textStyle: kDescriptionTextStyle(context).copyWith(fontWeight: FontWeight.bold),
+										),
+										onPressed: () async {
+											showModalBottomSheet(
+												context: context,
+												isScrollControlled: true,
+												backgroundColor: Colors.transparent,
+												builder: (_) => FutureBuilder<List<BreakTime>>(
+													future: BreakTimeService().fetchBreaksByAdminAndEmployee(
+														adminId,
+														attendance.employeeId,
+													),
+													builder: (context, snapshot) {
+														if (snapshot.connectionState == ConnectionState.waiting) {
+															return const Center(child: Padding(
+																padding: EdgeInsets.all(32.0),
+																child: CircularProgressIndicator(),
+															));
+														}
+														if (snapshot.hasError) {
+															return Center(child: Padding(
+																padding: EdgeInsets.all(32.0),
+																child: Text('Failed to load breaks', style: TextStyle(color: kerror)),
+															));
+														}
+														final breaks = snapshot.data ?? [];
+														final date = DateTime.parse(attendance.date);
+														final dayBreaks = breaks.where((b) {
+															if (b.breakInTime == null) return false;
+															final breakDate = DateTime.tryParse(b.breakInTime!.split('T').first);
+															return breakDate != null &&
+																breakDate.year == date.year &&
+																breakDate.month == date.month &&
+																breakDate.day == date.day;
+														}).toList();
+														return BreakTimeDetailsCard(breaks: dayBreaks);
+													},
+												),
+											);
+										},
+										child: const Text('View Breaks Taken'),
+									),
 								),
 							],
 						),
