@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart' show ChangeNotifierProvider;
+import '../../cards/attendance/download_sheet.dart';
 import '../../notifiers/attendance_notifier.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';
@@ -59,6 +60,40 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
 						padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
 						child: Column(
 							children: [
+								Row(
+									mainAxisAlignment: MainAxisAlignment.end,
+									children: [
+										OutlinedButton.icon(
+											icon: const Icon(Icons.download, size: 20),
+											label: const Text('Download Attendance Sheet'),
+											style: OutlinedButton.styleFrom(
+												foregroundColor: kBrown,
+												side: BorderSide(color: kBrown.withOpacity(0.4)),
+												shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+												padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+												textStyle: kDescriptionTextStyle(context).copyWith(fontWeight: FontWeight.bold),
+											),
+											onPressed: () {
+												showDialog(
+													context: context,
+													builder: (context) => Center(
+														child: Material(
+															color: Colors.transparent,
+															child: Container(
+																constraints: const BoxConstraints(maxWidth: 420),
+																child: DownloadSheet(
+																	employees: employees,
+																	adminId: adminId ?? 0,
+																),
+															),
+														),
+													),
+												);
+											},
+										),
+									],
+								),
+								const SizedBox(height: 10),
 								if (employeeNotifier.isLoading)
 									const Center(child: CircularProgressIndicator()),
 								if (employeeNotifier.error != null)
