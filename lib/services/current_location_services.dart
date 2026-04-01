@@ -1,13 +1,4 @@
-	Future<List<CurrentLocation>> fetchCurrentLocationForEmployee(int adminId, int employeeId) async {
-		final endpoint = '/current-location/admin/$adminId/employee/$employeeId';
-		final response = await _dio.get(endpoint);
-		if (response.statusCode == 200) {
-			final data = response.data as List;
-			return data.map((e) => CurrentLocation.fromJson(e)).toList();
-		} else {
-			throw Exception('Failed to fetch current location');
-		}
-	}
+
 
 import 'package:dio/dio.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
@@ -30,14 +21,14 @@ class CurrentLocationService {
 		));
 	}
 
-	Future<List<CurrentLocation>> fetchCurrentLocationsByAdmin(int adminId) async {
-		final endpoint = getCurrentLocationsByAdminEndpoint(adminId);
+		Future<List<CurrentLocation>> fetchCurrentLocationForEmployee(int adminId, int employeeId) async {
+		final endpoint = '/current-location/admin/$adminId/employee/$employeeId';
 		final response = await _dio.get(endpoint);
 		if (response.statusCode == 200) {
 			final data = response.data as List;
 			return data.map((e) => CurrentLocation.fromJson(e)).toList();
 		} else {
-			throw Exception('Failed to fetch current locations');
+			throw Exception('Failed to fetch current location');
 		}
 	}
 }

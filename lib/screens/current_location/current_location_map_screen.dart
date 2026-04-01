@@ -76,7 +76,7 @@ import '../../widgets/side_nav_bar.dart';
 										setState(() => selectedEmployeeId = value);
 										final adminId = auth.user?.adminId;
 										if (adminId != null && value != null) {
-											await ref.read(currentLocationNotifierProvider).fetchCurrentLocations(adminId);
+											await ref.read(currentLocationNotifierProvider).fetchCurrentLocationForEmployee(adminId, value);
 										}
 									},
 								),

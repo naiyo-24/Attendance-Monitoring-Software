@@ -1,4 +1,5 @@
 
+
 import 'package:flutter/material.dart';
 import '../models/current_location.dart';
 import '../services/current_location_services.dart';
@@ -13,12 +14,12 @@ class CurrentLocationNotifier extends ChangeNotifier {
 	bool get isLoading => _isLoading;
 	String? get error => _error;
 
-	Future<void> fetchCurrentLocations(int adminId) async {
+		Future<void> fetchCurrentLocationForEmployee(int adminId, int employeeId) async {
 		_isLoading = true;
 		_error = null;
 		notifyListeners();
 		try {
-			_locations = await _service.fetchCurrentLocationsByAdmin(adminId);
+			_locations = await _service.fetchCurrentLocationForEmployee(adminId, employeeId);
 		} catch (e) {
 			_error = e.toString();
 		}
