@@ -49,7 +49,7 @@ class BreakTimeDetailsCard extends StatelessWidget {
 																				child: Padding(
 																					padding: const EdgeInsets.only(left: 8.0),
 																					child: Image.network(
-																						b.breakInPhoto!.startsWith('http') ? b.breakInPhoto! : baseUrl + '/' + b.breakInPhoto!,
+																						b.breakInPhoto!.startsWith('http') ? b.breakInPhoto! : '$baseUrl/${b.breakInPhoto!}',
 																						width: 56,
 																						height: 56,
 																						fit: BoxFit.cover,
@@ -70,7 +70,7 @@ class BreakTimeDetailsCard extends StatelessWidget {
 																				child: Padding(
 																					padding: const EdgeInsets.only(left: 8.0),
 																					child: Image.network(
-																						b.breakOutPhoto!.startsWith('http') ? b.breakOutPhoto! : baseUrl + '/' + b.breakOutPhoto!,
+																						b.breakOutPhoto!.startsWith('http') ? b.breakOutPhoto! : '$baseUrl/${b.breakOutPhoto!}',
 																						width: 56,
 																						height: 56,
 																						fit: BoxFit.cover,
