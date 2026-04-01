@@ -116,7 +116,7 @@ class SideNavBar extends StatelessWidget {
       leading: Icon(icon, color: color ?? kGreen, size: 26),
       title: Text(
         title,
-        style: kDescriptionTextStyle(
+        style: kCaptionTextStyle(
           context,
         ).copyWith(color: color ?? kBrown, fontWeight: FontWeight.w600),
       ),

@@ -29,6 +29,13 @@ class _DownloadSheetState extends State<DownloadSheet> {
 		if (selectedEmployeeId == null) return;
 		setState(() => _isLoading = true);
 		try {
+			final _ = ScaffoldMessenger.of(context);
+			final selectedEmployee = widget.employees.firstWhere(
+				(e) => e['id'] == selectedEmployeeId,
+				orElse: () => <String, dynamic>{},
+			);
+			final employeeName = (selectedEmployee['name'] ?? '').toString();
+
 			// Fetch attendance data
 			final attendanceList = await _attendanceService.fetchAttendanceByAdminAndEmployee(widget.adminId, selectedEmployeeId!);
 			// Filter by selected month/year
@@ -55,7 +62,7 @@ class _DownloadSheetState extends State<DownloadSheet> {
 						return [
 							pw.Text('Attendance Sheet', style: pw.TextStyle(fontSize: 22, fontWeight: pw.FontWeight.bold)),
 							pw.SizedBox(height: 8),
-							pw.Text('Employee: ' + (widget.employees.firstWhere((e) => e['id'] == selectedEmployeeId)['name'] ?? '')), 
+							pw.Text('Employee: $employeeName'),
 							pw.Text('Month: ${selectedMonth.toString().padLeft(2, '0')} / $selectedYear'),
 							pw.SizedBox(height: 16),
 							pw.TableHelper.fromTextArray(
@@ -114,11 +121,12 @@ class _DownloadSheetState extends State<DownloadSheet> {
 
 			await Printing.layoutPdf(onLayout: (format) async => pdf.save());
 		} catch (e) {
+			if (!mounted) return;
 			ScaffoldMessenger.of(context).showSnackBar(
 				SnackBar(content: Text('Failed to generate PDF: $e')),
 			);
 		} finally {
-			setState(() => _isLoading = false);
+			if (mounted) setState(() => _isLoading = false);
 		}
 	}
 

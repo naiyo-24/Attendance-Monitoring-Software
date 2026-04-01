@@ -106,12 +106,14 @@ class AttendanceDetailsCard extends StatelessWidget {
 												onPressed: attendance.status == AttendanceStatus.present
 														? null
 														: () async {
-																await context.read<AttendanceNotifier>().updateAttendanceStatus(
+																	final notifier = context.read<AttendanceNotifier>();
+																	final navigator = Navigator.of(context);
+																	await notifier.updateAttendanceStatus(
 																	attendanceId: attendance.attendanceId,
 																	adminId: adminId,
 																	status: AttendanceStatus.present,
 																);
-																Navigator.pop(context);
+																	navigator.pop();
 															},
 												child: const Text('Mark as Present'),
 											),
@@ -127,12 +129,14 @@ class AttendanceDetailsCard extends StatelessWidget {
 												onPressed: attendance.status == AttendanceStatus.absent
 														? null
 														: () async {
-																await context.read<AttendanceNotifier>().updateAttendanceStatus(
+																	final notifier = context.read<AttendanceNotifier>();
+																	final navigator = Navigator.of(context);
+																	await notifier.updateAttendanceStatus(
 																	attendanceId: attendance.attendanceId,
 																	adminId: adminId,
 																	status: AttendanceStatus.absent,
 																);
-																Navigator.pop(context);
+																	navigator.pop();
 															},
 												child: const Text('Mark as Absent'),
 											),
