@@ -18,10 +18,10 @@ class AttendanceDetailsCard extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) {
 		String? checkInPhotoUrl = attendance.checkInPhoto != null && attendance.checkInPhoto!.isNotEmpty
-				? (attendance.checkInPhoto!.startsWith('http') ? attendance.checkInPhoto! : baseUrl + '/' + attendance.checkInPhoto!)
+				? (attendance.checkInPhoto!.startsWith('http') ? attendance.checkInPhoto! : '$baseUrl/${attendance.checkInPhoto!}')
 				: null;
 		String? checkOutPhotoUrl = attendance.checkOutPhoto != null && attendance.checkOutPhoto!.isNotEmpty
-				? (attendance.checkOutPhoto!.startsWith('http') ? attendance.checkOutPhoto! : baseUrl + '/' + attendance.checkOutPhoto!)
+				? (attendance.checkOutPhoto!.startsWith('http') ? attendance.checkOutPhoto! : '$baseUrl/${attendance.checkOutPhoto!}')
 				: null;
 
 		return Center(

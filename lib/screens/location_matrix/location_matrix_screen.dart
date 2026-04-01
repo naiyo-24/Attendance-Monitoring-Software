@@ -124,7 +124,7 @@ class _LocationMatrixScreenState extends ConsumerState<LocationMatrixScreen> {
                     : ListView.separated(
                         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 0),
                         itemCount: matrixNotifier.matrices.length,
-                        separatorBuilder: (_, __) => const SizedBox(height: 20),
+                        separatorBuilder: (_, _) => const SizedBox(height: 20),
                         itemBuilder: (context, index) {
                           final matrix = matrixNotifier.matrices[index];
                           return MatrixCard(
