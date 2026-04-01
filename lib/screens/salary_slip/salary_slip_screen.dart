@@ -115,7 +115,7 @@ class _SalarySlipScreenState extends ConsumerState<SalarySlipScreen> {
 				title: 'Salary Slips',
 				subtitle: 'Manage employee salary slips',
 			),
-			drawer: const SideNavBar(),
+			drawer:  SideNavBar(adminUser: ref.watch(authProvider).user!),
 			body: Padding(
 				padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
 				child: isLoading

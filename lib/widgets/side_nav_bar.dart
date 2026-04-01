@@ -1,3 +1,4 @@
+import 'package:attendance_admin_panel/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
@@ -5,7 +6,7 @@ import '../theme/app_theme.dart';
 
 class SideNavBar extends StatelessWidget {
   final void Function(String route)? onNavigate;
-  const SideNavBar({super.key, this.onNavigate});
+  const SideNavBar({super.key, this.onNavigate, required User adminUser});
 
   @override
   Widget build(BuildContext context) {
@@ -45,14 +46,20 @@ class SideNavBar extends StatelessWidget {
           _drawerItem(
             context,
             Iconsax.location,
-            'Set Location Matrix',
+            'Location Matrix Management',
             '/set-location-matrix',
           ),
           _drawerItem(
             context,
             Iconsax.user_add,
-            'Onboard Employees',
+            'Employee Management',
             '/onboard-employees',
+          ),
+          _drawerItem(
+            context,
+            Iconsax.location,
+            'Location Tracking',
+            '/location-tracking',
           ),
           _drawerItem(
             context,
@@ -69,7 +76,7 @@ class SideNavBar extends StatelessWidget {
           _drawerItem(
             context,
             Iconsax.sun_1,
-            'Leave Applications',
+            'Leave Management',
             '/leave-applications',
           ),
           _drawerItem(context, Iconsax.receipt, 'Salary Slip', '/salary-slip'),

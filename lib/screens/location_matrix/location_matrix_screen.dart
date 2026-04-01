@@ -75,7 +75,7 @@ class _LocationMatrixScreenState extends ConsumerState<LocationMatrixScreen> {
       }
     }
     return Scaffold(
-      drawer: const SideNavBar(),
+      drawer:  SideNavBar(adminUser: ref.watch(authProvider).user!),
       appBar: const PremiumAppBar(
         title: 'Location Matrix',
         subtitle: 'Manage allowed locations',

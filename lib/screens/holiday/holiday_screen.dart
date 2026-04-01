@@ -90,7 +90,7 @@ class _HolidayScreenState extends ConsumerState<HolidayScreen> {
     final selectedHoliday = selectedHolidayIndex != -1 ? holidays[selectedHolidayIndex] : null;
 
     return Scaffold(
-      drawer: const SideNavBar(),
+      drawer:  SideNavBar(adminUser: ref.watch(authProvider).user!),
       appBar: const PremiumAppBar(
         title: 'Holiday List',
         subtitle: 'View & manage holidays',

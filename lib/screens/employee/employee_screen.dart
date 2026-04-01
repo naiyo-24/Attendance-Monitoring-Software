@@ -117,7 +117,7 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
     }).toList();
 
     return Scaffold(
-      drawer: const SideNavBar(),
+      drawer: SideNavBar(adminUser: auth.user!),
       appBar: const PremiumAppBar(
         title: 'Employees',
         subtitle: 'Manage & onboard employees',

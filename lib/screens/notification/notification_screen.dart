@@ -59,7 +59,7 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
         title: 'Notification Management',
         subtitle: 'Manage and send notifications',
       ),
-      drawer: const SideNavBar(),
+      drawer:  SideNavBar(adminUser: ref.watch(authProvider).user!),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
         child: Column(

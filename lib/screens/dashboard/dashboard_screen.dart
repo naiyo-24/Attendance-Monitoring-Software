@@ -1,3 +1,4 @@
+import 'package:attendance_admin_panel/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../theme/app_theme.dart';
@@ -29,7 +30,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final dashboard = ref.watch(dashboardProvider);
     return Scaffold(
       backgroundColor: kWhiteGrey,
-      drawer: const SideNavBar(),
+      drawer: SideNavBar(adminUser: ref.watch(authProvider).user!),
       appBar: const PremiumAppBar(
         title: 'Dashboard',
         subtitle: 'Overview',

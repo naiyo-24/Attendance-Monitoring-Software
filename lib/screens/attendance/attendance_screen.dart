@@ -51,7 +51,7 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
 			child: Builder(
 				builder: (context) => Scaffold(
 					backgroundColor: kWhiteGrey,
-					drawer: const SideNavBar(),
+					drawer:  SideNavBar(adminUser: ref.watch(authProvider).user!),
 					appBar: const PremiumAppBar(
 						title: 'Attendance',
 						subtitle: 'Employee attendance records',

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:location_picker_flutter_map/location_picker_flutter_map.dart';
+import 'package:provider/provider.dart';
 
+import '../../notifiers/auth_notifier.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';
 import '../../widgets/side_nav_bar.dart';
@@ -21,8 +23,9 @@ class _MapPickerScreenState extends State<MapPickerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<AuthNotifier>(context, listen: false);
     return Scaffold(
-      drawer: const SideNavBar(),
+      drawer: SideNavBar(adminUser: auth.user!),
       appBar: const PremiumAppBar(
         title: 'Location Matrix',
         subtitle: 'Manage allowed locations',

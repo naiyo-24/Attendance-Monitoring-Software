@@ -111,7 +111,7 @@ class _LeaveApplicationScreenState extends ConsumerState<LeaveApplicationScreen>
 					title: 'Leave Applications',
 					subtitle: 'Manage employee leave requests',
 				),
-				drawer: const SideNavBar(),
+				drawer:  SideNavBar(adminUser: ref.watch(authProvider).user!),
 				body: Padding(
 					padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
 					child: Column(
