@@ -51,6 +51,7 @@ dependencies:
   printing: ^5.14.3
   flutter_map: ^8.2.2
   latlong2: ^0.9.1
+  
 
 dev_dependencies:
   flutter_test:

@@ -86,12 +86,12 @@ class SideNavBar extends StatelessWidget {
             'Notification Management',
             '/notification-management',
           ),
-          _drawerItem(
-            context,
-            Iconsax.info_circle,
-            'Help Center',
-            '/help-center',
-          ),
+          // _drawerItem(
+          //   context,
+          //   Iconsax.info_circle,
+          //   'Help Center',
+          //   '/help-center',
+          // ),
           const Divider(),
           _drawerItem(
             context,
