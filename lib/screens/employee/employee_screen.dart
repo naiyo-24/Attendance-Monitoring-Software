@@ -172,7 +172,7 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
                       hintText: 'Search by name or phone no.',
                       hintStyle: kTaglineTextStyle(context).copyWith(color: kBrown.withAlpha((0.7 * 255).toInt())),
                       filled: true,
-                      fillColor: kWhiteGrey.withOpacity(0.8),
+                      fillColor: kWhiteGrey.withAlpha(80),
                       contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 18),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(24),

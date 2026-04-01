@@ -17,7 +17,7 @@ class BreakTimeDetailsCard extends StatelessWidget {
 					borderRadius: BorderRadius.circular(24),
 					boxShadow: [
 						BoxShadow(
-							color: kBrown.withOpacity(0.08),
+							color: kBrown.withAlpha(8),
 							blurRadius: 24,
 							offset: const Offset(0, 8),
 						),

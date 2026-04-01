@@ -21,10 +21,10 @@ class EmployeeCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
-        color: kWhite.withOpacity(0.7),
+        color: kWhite.withAlpha(70),
         boxShadow: [
           BoxShadow(
-            color: kBrown.withOpacity(0.07),
+            color: kBrown.withAlpha(7),
             blurRadius: 24,
             offset: const Offset(0, 8),
           ),
@@ -55,7 +55,7 @@ class EmployeeCard extends StatelessWidget {
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: kBrown.withOpacity(0.08),
+                            color: kBrown.withAlpha(8),
                             blurRadius: 12,
                             offset: const Offset(0, 4),
                           ),

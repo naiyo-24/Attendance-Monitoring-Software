@@ -128,7 +128,7 @@ import '../../widgets/side_nav_bar.dart';
 																			borderRadius: BorderRadius.circular(8),
 																			boxShadow: [
 																				BoxShadow(
-																					color: Colors.black.withOpacity(0.08),
+																					color: Colors.black.withAlpha(8),
 																					blurRadius: 4,
 																					offset: const Offset(0, 2),
 																				),

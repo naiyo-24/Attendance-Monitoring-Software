@@ -35,7 +35,7 @@ class _FilterCardState extends State<FilterCard> {
 								decoration: BoxDecoration(
 									color: kWhiteGrey,
 									borderRadius: BorderRadius.circular(12),
-									border: Border.all(color: kBrown.withOpacity(0.2)),
+									border: Border.all(color: kBrown.withAlpha(2)),
 								),
 								child: DropdownButtonHideUnderline(
 									child: DropdownButton<int>(

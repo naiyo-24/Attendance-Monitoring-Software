@@ -34,7 +34,7 @@ class CalendarCard extends StatelessWidget {
 					eventLoader: (day) => events[DateTime(day.year, day.month, day.day)] ?? [],
 					calendarStyle: CalendarStyle(
 						todayDecoration: BoxDecoration(
-							color: kBrown.withOpacity(0.15),
+							color: kBrown.withAlpha(15),
 							shape: BoxShape.circle,
 						),
 						selectedDecoration: BoxDecoration(
@@ -47,7 +47,7 @@ class CalendarCard extends StatelessWidget {
 						),
 						weekendTextStyle: kDescriptionTextStyle(context).copyWith(color: kPink),
 						defaultTextStyle: kDescriptionTextStyle(context),
-						outsideTextStyle: kDescriptionTextStyle(context).copyWith(color: kPink.withOpacity(0.5)),
+						outsideTextStyle: kDescriptionTextStyle(context).copyWith(color: kPink.withAlpha(5)),
 					),
 					headerStyle: HeaderStyle(
 						titleTextStyle: kHeaderTextStyle(context).copyWith(fontSize: 18),

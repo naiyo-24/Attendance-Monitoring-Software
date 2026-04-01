@@ -32,7 +32,7 @@ class AttendanceDetailsCard extends StatelessWidget {
 					borderRadius: BorderRadius.circular(24),
 					boxShadow: [
 						BoxShadow(
-							color: kBrown.withOpacity(0.08),
+							color: kBrown.withAlpha(8),
 							blurRadius: 24,
 							offset: const Offset(0, 8),
 						),
@@ -144,7 +144,7 @@ class AttendanceDetailsCard extends StatelessWidget {
 									child: OutlinedButton(
 										style: OutlinedButton.styleFrom(
 											foregroundColor: kBrown,
-											side: BorderSide(color: kBrown.withOpacity(0.4)),
+											side: BorderSide(color: kBrown.withAlpha(4)),
 											shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
 											padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
 											textStyle: kDescriptionTextStyle(context).copyWith(fontWeight: FontWeight.bold),

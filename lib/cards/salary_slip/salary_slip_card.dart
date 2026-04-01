@@ -18,10 +18,10 @@ class SalarySlipCard extends StatelessWidget {
 			margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
 			decoration: BoxDecoration(
 				borderRadius: BorderRadius.circular(24),
-				color: kWhite.withOpacity(0.7),
+				color: kWhite.withAlpha(70),
 				boxShadow: [
 					BoxShadow(
-						color: kBrown.withOpacity(0.07),
+						color: kBrown.withAlpha(7),
 						blurRadius: 24,
 						offset: const Offset(0, 8),
 					),
@@ -43,7 +43,7 @@ class SalarySlipCard extends StatelessWidget {
 									children: [
 										CircleAvatar(
 											radius: 28,
-											backgroundColor: kGreen.withOpacity(0.12),
+											backgroundColor: kGreen.withAlpha(120),
 											child: Text(emp.name[0], style: kHeaderTextStyle(context).copyWith(fontSize: 22)),
 										),
 										const SizedBox(width: 18),

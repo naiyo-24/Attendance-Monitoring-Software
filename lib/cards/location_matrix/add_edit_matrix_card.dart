@@ -63,11 +63,11 @@ class _AddEditMatrixCardState extends State<AddEditMatrixCard> {
         child: Container(
           constraints: const BoxConstraints(maxWidth: 420, minHeight: 0, maxHeight: 320),
           decoration: BoxDecoration(
-            color: kWhite.withOpacity(0.95),
+            color: kWhite.withAlpha(95),
             borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
             boxShadow: [
               BoxShadow(
-                color: kBrown.withOpacity(0.09),
+                color: kBrown.withAlpha(9),
                 blurRadius: 32,
                 offset: const Offset(0, 12),
               ),
@@ -91,7 +91,7 @@ class _AddEditMatrixCardState extends State<AddEditMatrixCard> {
                     height: 4,
                     margin: const EdgeInsets.only(bottom: 14),
                     decoration: BoxDecoration(
-                      color: kBrown.withOpacity(0.18),
+                      color: kBrown.withAlpha(18),
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),

@@ -71,11 +71,11 @@ class _AddEditEmployeeCardState extends State<AddEditEmployeeCard> {
         child: Container(
           constraints: const BoxConstraints(maxWidth: 480),
           decoration: BoxDecoration(
-            color: kWhite.withOpacity(0.85),
+            color: kWhite.withAlpha(85),
             borderRadius: BorderRadius.circular(28),
             boxShadow: [
               BoxShadow(
-                color: kBrown.withOpacity(0.09),
+                color: kBrown.withAlpha(9),
                 blurRadius: 32,
                 offset: const Offset(0, 12),
               ),
@@ -179,10 +179,10 @@ class _AddEditEmployeeCardState extends State<AddEditEmployeeCard> {
           borderSide: BorderSide.none,
         ),
         filled: true,
-        fillColor: kWhiteGrey.withOpacity(0.7),
+        fillColor: kWhiteGrey.withAlpha(7),
         contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 18),
-        labelStyle: kTaglineTextStyle(context).copyWith(color: kBrown.withOpacity(0.8)),
-        hintStyle: kCaptionTextStyle(context).copyWith(color: kBrown.withOpacity(0.6)),
+        labelStyle: kTaglineTextStyle(context).copyWith(color: kBrown.withAlpha(8)),
+        hintStyle: kCaptionTextStyle(context).copyWith(color: kBrown.withAlpha(6)),
       ),
       validator: (val) => val == null || val.isEmpty ? 'Required' : null,
     );

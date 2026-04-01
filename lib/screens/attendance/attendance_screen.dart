@@ -68,7 +68,7 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
 											label: const Text('Download Attendance Sheet'),
 											style: OutlinedButton.styleFrom(
 												foregroundColor: kBrown,
-												side: BorderSide(color: kBrown.withOpacity(0.4)),
+												side: BorderSide(color: kBrown.withAlpha(40)),
 												shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
 												padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
 												textStyle: kDescriptionTextStyle(context).copyWith(fontWeight: FontWeight.bold),
