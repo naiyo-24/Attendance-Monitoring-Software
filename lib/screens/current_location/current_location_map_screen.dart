@@ -63,7 +63,7 @@ import '../../widgets/side_nav_bar.dart';
 							Padding(
 								padding: const EdgeInsets.all(12.0),
 								child: DropdownButtonFormField<int>(
-									value: selectedEmployeeId,
+									initialValue: selectedEmployeeId,
 									decoration: const InputDecoration(
 										labelText: 'Select Employee',
 										border: OutlineInputBorder(),

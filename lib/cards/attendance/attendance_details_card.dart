@@ -99,7 +99,7 @@ class AttendanceDetailsCard extends StatelessWidget {
 										Expanded(
 											child: ElevatedButton(
 												style: kPremiumButtonStyle(context).copyWith(
-													backgroundColor: MaterialStateProperty.all(
+													backgroundColor: WidgetStateProperty.all(
 														attendance.status == AttendanceStatus.present ? Colors.green : kGreen,
 													),
 												),
@@ -120,7 +120,7 @@ class AttendanceDetailsCard extends StatelessWidget {
 										Expanded(
 											child: ElevatedButton(
 												style: kPremiumButtonStyle(context).copyWith(
-													backgroundColor: MaterialStateProperty.all(
+													backgroundColor: WidgetStateProperty.all(
 														attendance.status == AttendanceStatus.absent ? Colors.red : kerror,
 													),
 												),
