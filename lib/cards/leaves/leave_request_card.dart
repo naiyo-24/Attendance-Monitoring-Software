@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import '../../models/leaves.dart';
+import '../../providers/leaves_provider.dart';
 import '../../theme/app_theme.dart';
 
 class LeaveRequestCard extends StatelessWidget {
 	final Leave leave;
-	final VoidCallback? onApprove;
-	final VoidCallback? onReject;
-	const LeaveRequestCard({super.key, required this.leave, this.onApprove, this.onReject});
+	const LeaveRequestCard({super.key, required this.leave});
 
 	@override
 	Widget build(BuildContext context) {
+		final leavesNotifier = LeavesProvider.of(context);
+
 		return Card(
 			shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
 			color: kWhiteGrey,
@@ -60,13 +61,27 @@ class LeaveRequestCard extends StatelessWidget {
 							Row(
 								children: [
 									ElevatedButton(
-										onPressed: onApprove,
+										onPressed: leave.leaveId == null
+											? null
+											: () {
+												leavesNotifier.updateLeaveStatus(
+													leaveId: leave.leaveId!,
+													status: LeaveStatus.approved,
+												);
+											},
 										style: kPremiumButtonStyle(context).copyWith(backgroundColor: WidgetStateProperty.all(kGreen)),
 										child: const Text('Approve'),
 									),
 									const SizedBox(width: 10),
 									ElevatedButton(
-										onPressed: onReject,
+										onPressed: leave.leaveId == null
+											? null
+											: () {
+												leavesNotifier.updateLeaveStatus(
+													leaveId: leave.leaveId!,
+													status: LeaveStatus.rejected,
+												);
+											},
 										style: kPremiumButtonStyle(context).copyWith(backgroundColor: WidgetStateProperty.all(kPink)),
 										child: const Text('Reject'),
 									),

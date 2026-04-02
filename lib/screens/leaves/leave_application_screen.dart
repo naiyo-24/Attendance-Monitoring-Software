@@ -82,25 +82,6 @@ class _LeaveApplicationScreenState extends ConsumerState<LeaveApplicationScreen>
 		}
 	}
 
-	Future<void> _approveLeave(int idx) async {
-		final leave = filteredLeaves[idx];
-		await leavesNotifier.updateLeaveStatus(
-			leaveId: leave.leaveId!,
-			status: LeaveStatus.approved,
-		);
-		setState(() {});
-	}
-
-	Future<void> _rejectLeave(int idx) async {
-		final leave = filteredLeaves[idx];
-		await leavesNotifier.updateLeaveStatus(
-			leaveId: leave.leaveId!,
-			status: LeaveStatus.rejected,
-		);
-		setState(() {});
-	}
-
-
 	@override
 	Widget build(BuildContext context) {
 		// Use Riverpod for employee list in LeaveSearchFilterCard
@@ -128,8 +109,6 @@ class _LeaveApplicationScreenState extends ConsumerState<LeaveApplicationScreen>
 													final leave = filteredLeaves[idx];
 													return LeaveRequestCard(
 														leave: leave,
-														onApprove: leave.status == LeaveStatus.pending ? () => _approveLeave(idx) : null,
-														onReject: leave.status == LeaveStatus.pending ? () => _rejectLeave(idx) : null,
 													);
 												},
 											),
