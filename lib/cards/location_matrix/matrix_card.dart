@@ -29,7 +29,9 @@ class MatrixCard extends ConsumerWidget {
     final adminId = auth.user?.adminId;
     final matrixNotifier = ref.watch(locationMatrixNotifierProvider);
     // Optionally, fetch matrices for current adminId if needed
-    if (adminId != null && matrixNotifier.matrices.isEmpty && !matrixNotifier.isLoading) {
+    if (adminId != null &&
+        matrixNotifier.matrices.isEmpty &&
+        !matrixNotifier.isLoading) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ref.read(locationMatrixNotifierProvider).fetchMatrices(adminId);
       });
@@ -65,35 +67,55 @@ class MatrixCard extends ConsumerWidget {
                     children: [
                       Text(
                         'Store $storeNumber',
-                        style: kHeaderTextStyle(context).copyWith(
-                          fontSize: 20,
-                          color: kBrown,
-                        ),
+                        style: kHeaderTextStyle(
+                          context,
+                        ).copyWith(fontSize: 20, color: kBrown),
                       ),
                       const SizedBox(height: 10),
                       Row(
                         children: [
                           Icon(Iconsax.global, color: kBrown, size: 18),
                           const SizedBox(width: 6),
-                          Text('Latitude', style: kTaglineTextStyle(context).copyWith(fontSize: 15)),
+                          Text(
+                            'Latitude',
+                            style: kTaglineTextStyle(
+                              context,
+                            ).copyWith(fontSize: 15),
+                          ),
                         ],
                       ),
-                      Text(latitude, style: kHeaderTextStyle(context).copyWith(fontSize: 18)),
+                      Text(
+                        latitude,
+                        style: kHeaderTextStyle(context).copyWith(fontSize: 18),
+                      ),
                       const SizedBox(height: 8),
                       Row(
                         children: [
                           Icon(Iconsax.global, color: kBrown, size: 18),
                           const SizedBox(width: 6),
-                          Text('Longitude', style: kTaglineTextStyle(context).copyWith(fontSize: 15)),
+                          Text(
+                            'Longitude',
+                            style: kTaglineTextStyle(
+                              context,
+                            ).copyWith(fontSize: 15),
+                          ),
                         ],
                       ),
-                      Text(longitude, style: kHeaderTextStyle(context).copyWith(fontSize: 18)),
+                      Text(
+                        longitude,
+                        style: kHeaderTextStyle(context).copyWith(fontSize: 18),
+                      ),
                       const SizedBox(height: 12),
                       ElevatedButton.icon(
                         style: kPremiumButtonStyle(context).copyWith(
                           backgroundColor: WidgetStateProperty.all(kGreen),
                           foregroundColor: WidgetStateProperty.all(kWhiteGrey),
-                          padding: WidgetStateProperty.all(const EdgeInsets.symmetric(vertical: 10, horizontal: 18)),
+                          padding: WidgetStateProperty.all(
+                            const EdgeInsets.symmetric(
+                              vertical: 10,
+                              horizontal: 18,
+                            ),
+                          ),
                         ),
                         icon: const Icon(Iconsax.location, size: 18),
                         label: const Text('View Location'),
@@ -101,9 +123,14 @@ class MatrixCard extends ConsumerWidget {
                           final lat = double.tryParse(latitude);
                           final lng = double.tryParse(longitude);
                           if (lat != null && lng != null) {
-                            final url = Uri.parse('https://www.google.com/maps/search/?api=1&query=$lat,$lng');
+                            final url = Uri.parse(
+                              'https://www.google.com/maps/search/?api=1&query=$lat,$lng',
+                            );
                             if (await canLaunchUrl(url)) {
-                              await launchUrl(url, mode: LaunchMode.externalApplication);
+                              await launchUrl(
+                                url,
+                                mode: LaunchMode.externalApplication,
+                              );
                             }
                           }
                         },
@@ -117,13 +144,21 @@ class MatrixCard extends ConsumerWidget {
                   child: Row(
                     children: [
                       IconButton(
-                        icon: const Icon(Iconsax.edit_2, color: kGreen, size: 26),
+                        icon: const Icon(
+                          Iconsax.edit_2,
+                          color: kGreen,
+                          size: 26,
+                        ),
                         onPressed: onEdit,
                         tooltip: 'Edit',
                         splashRadius: 24,
                       ),
                       IconButton(
-                        icon: const Icon(Iconsax.trash, color: kerror, size: 26),
+                        icon: const Icon(
+                          Iconsax.trash,
+                          color: kerror,
+                          size: 26,
+                        ),
                         onPressed: onDelete,
                         tooltip: 'Delete',
                         splashRadius: 24,
