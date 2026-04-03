@@ -39,8 +39,9 @@ class AttendanceDetailsCard extends StatelessWidget {
 
   String _formatLocalDate(BuildContext context, String? value) {
     final dt = _tryParseDateTime(value);
-    if (dt == null)
+    if (dt == null) {
       return value?.trim().isNotEmpty == true ? value!.trim() : '-';
+    }
     final local = dt.toLocal();
     final dateOnly = DateTime(local.year, local.month, local.day);
     return MaterialLocalizations.of(context).formatFullDate(dateOnly);

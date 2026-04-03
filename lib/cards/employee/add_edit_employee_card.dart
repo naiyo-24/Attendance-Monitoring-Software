@@ -267,10 +267,10 @@ class _AddEditEmployeeCardState extends State<AddEditEmployeeCard> {
         ),
         labelStyle: kTaglineTextStyle(
           context,
-        ).copyWith(color: kBlack.withOpacity(0.8)),
+        ).copyWith(color: kBlack.withAlpha(80)),
         hintStyle: kCaptionTextStyle(
           context,
-        ).copyWith(color: kBlack.withOpacity(0.6)),
+        ).copyWith(color: kBlack.withAlpha(60)),
       ),
       validator: (val) {
         if (!required) return null;
