@@ -5,11 +5,7 @@ import '../../theme/app_theme.dart';
 class AddEditEmployeeCard extends StatefulWidget {
   final Map<String, dynamic>? employee;
   final void Function(Map<String, dynamic> emp) onSave;
-  const AddEditEmployeeCard({
-    super.key,
-    this.employee,
-    required this.onSave,
-  });
+  const AddEditEmployeeCard({super.key, this.employee, required this.onSave});
 
   @override
   State<AddEditEmployeeCard> createState() => _AddEditEmployeeCardState();
@@ -31,16 +27,36 @@ class _AddEditEmployeeCardState extends State<AddEditEmployeeCard> {
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: widget.employee?['name'] ?? '');
-    _phoneController = TextEditingController(text: widget.employee?['phone'] ?? '');
-    _emailController = TextEditingController(text: widget.employee?['email'] ?? '');
-    _passwordController = TextEditingController(text: widget.employee?['password'] ?? '');
-    _bankNameController = TextEditingController(text: widget.employee?['bankName'] ?? '');
-    _branchNameController = TextEditingController(text: widget.employee?['branchName'] ?? '');
-    _accountNoController = TextEditingController(text: widget.employee?['accountNo'] ?? '');
-    _ifscController = TextEditingController(text: widget.employee?['ifsc'] ?? '');
-    _designationController = TextEditingController(text: widget.employee?['designation'] ?? '');
-    _addressController = TextEditingController(text: widget.employee?['address'] ?? '');
+    _nameController = TextEditingController(
+      text: widget.employee?['name'] ?? '',
+    );
+    _phoneController = TextEditingController(
+      text: widget.employee?['phone'] ?? '',
+    );
+    _emailController = TextEditingController(
+      text: widget.employee?['email'] ?? '',
+    );
+    _passwordController = TextEditingController(
+      text: widget.employee?['password'] ?? '',
+    );
+    _bankNameController = TextEditingController(
+      text: widget.employee?['bankName'] ?? '',
+    );
+    _branchNameController = TextEditingController(
+      text: widget.employee?['branchName'] ?? '',
+    );
+    _accountNoController = TextEditingController(
+      text: widget.employee?['accountNo'] ?? '',
+    );
+    _ifscController = TextEditingController(
+      text: widget.employee?['ifsc'] ?? '',
+    );
+    _designationController = TextEditingController(
+      text: widget.employee?['designation'] ?? '',
+    );
+    _addressController = TextEditingController(
+      text: widget.employee?['address'] ?? '',
+    );
   }
 
   @override
@@ -94,37 +110,87 @@ class _AddEditEmployeeCardState extends State<AddEditEmployeeCard> {
                     Row(
                       children: [
                         Icon(
-                          widget.employee == null ? Iconsax.user_add : Iconsax.edit,
+                          widget.employee == null
+                              ? Iconsax.user_add
+                              : Iconsax.edit,
                           color: kGreen,
                           size: 28,
                         ),
                         const SizedBox(width: 10),
                         Text(
-                          widget.employee == null ? 'Onboard New Employee' : 'Edit Employee',
-                          style: kHeaderTextStyle(context).copyWith(fontSize: 22),
+                          widget.employee == null
+                              ? 'Onboard New Employee'
+                              : 'Edit Employee',
+                          style: kHeaderTextStyle(
+                            context,
+                          ).copyWith(fontSize: 22),
                         ),
                       ],
                     ),
                     const SizedBox(height: 22),
-                    _buildTextField(_nameController, 'Name', icon: Iconsax.user),
+                    _buildTextField(
+                      _nameController,
+                      'Full Name',
+                      icon: Iconsax.user,
+                      required: true,
+                    ),
                     const SizedBox(height: 14),
-                    _buildTextField(_phoneController, 'Phone No.', icon: Iconsax.call),
+                    _buildTextField(
+                      _phoneController,
+                      'Phone No.',
+                      icon: Iconsax.call,
+                      required: true,
+                    ),
                     const SizedBox(height: 14),
-                    _buildTextField(_emailController, 'Email', icon: Iconsax.sms),
+                    _buildTextField(
+                      _emailController,
+                      'Email',
+                      icon: Iconsax.sms,
+                    ),
                     const SizedBox(height: 14),
-                    _buildTextField(_passwordController, 'Password', icon: Iconsax.key, obscure: true),
+                    _buildTextField(
+                      _passwordController,
+                      'Password',
+                      icon: Iconsax.key,
+                      obscure: true,
+                      required: true,
+                    ),
                     const SizedBox(height: 14),
-                    _buildTextField(_bankNameController, 'Bank Name', icon: Iconsax.bank),
+                    _buildTextField(
+                      _bankNameController,
+                      'Bank Name',
+                      icon: Iconsax.bank,
+                    ),
                     const SizedBox(height: 14),
-                    _buildTextField(_branchNameController, 'Branch Name', icon: Iconsax.building_3),
+                    _buildTextField(
+                      _branchNameController,
+                      'Branch Name',
+                      icon: Iconsax.building_3,
+                    ),
                     const SizedBox(height: 14),
-                    _buildTextField(_accountNoController, 'Account No.', icon: Iconsax.card),
+                    _buildTextField(
+                      _accountNoController,
+                      'Account No.',
+                      icon: Iconsax.card,
+                    ),
                     const SizedBox(height: 14),
-                    _buildTextField(_ifscController, 'IFSC Code', icon: Iconsax.code),
+                    _buildTextField(
+                      _ifscController,
+                      'IFSC Code',
+                      icon: Iconsax.code,
+                    ),
                     const SizedBox(height: 14),
-                    _buildTextField(_designationController, 'Designation', icon: Iconsax.user_tag),
+                    _buildTextField(
+                      _designationController,
+                      'Designation',
+                      icon: Iconsax.user_tag,
+                    ),
                     const SizedBox(height: 14),
-                    _buildTextField(_addressController, 'Address', icon: Iconsax.location),
+                    _buildTextField(
+                      _addressController,
+                      'Address',
+                      icon: Iconsax.location,
+                    ),
                     const SizedBox(height: 28),
                     SizedBox(
                       width: double.infinity,
@@ -132,10 +198,19 @@ class _AddEditEmployeeCardState extends State<AddEditEmployeeCard> {
                         style: kPremiumButtonStyle(context).copyWith(
                           backgroundColor: WidgetStateProperty.all(kGreen),
                           foregroundColor: WidgetStateProperty.all(kWhite),
-                          padding: WidgetStateProperty.all(const EdgeInsets.symmetric(vertical: 18)),
+                          padding: WidgetStateProperty.all(
+                            const EdgeInsets.symmetric(vertical: 18),
+                          ),
                         ),
-                        icon: Icon(widget.employee == null ? Iconsax.user_add : Iconsax.save_2, size: 22),
-                        label: Text(widget.employee == null ? 'Onboard' : 'Save'),
+                        icon: Icon(
+                          widget.employee == null
+                              ? Iconsax.user_add
+                              : Iconsax.save_2,
+                          size: 22,
+                        ),
+                        label: Text(
+                          widget.employee == null ? 'Onboard' : 'Save',
+                        ),
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             widget.onSave({
@@ -165,7 +240,13 @@ class _AddEditEmployeeCardState extends State<AddEditEmployeeCard> {
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String label, {IconData? icon, bool obscure = false}) {
+  Widget _buildTextField(
+    TextEditingController controller,
+    String label, {
+    IconData? icon,
+    bool obscure = false,
+    bool required = false,
+  }) {
     return TextFormField(
       controller: controller,
       obscureText: obscure,
@@ -180,11 +261,22 @@ class _AddEditEmployeeCardState extends State<AddEditEmployeeCard> {
         ),
         filled: true,
         fillColor: kWhiteGrey.withAlpha(7),
-        contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 18),
-        labelStyle: kTaglineTextStyle(context).copyWith(color: kBrown.withAlpha(8)),
-        hintStyle: kCaptionTextStyle(context).copyWith(color: kBrown.withAlpha(6)),
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 18,
+          horizontal: 18,
+        ),
+        labelStyle: kTaglineTextStyle(
+          context,
+        ).copyWith(color: kBlack.withOpacity(0.8)),
+        hintStyle: kCaptionTextStyle(
+          context,
+        ).copyWith(color: kBlack.withOpacity(0.6)),
       ),
-      validator: (val) => val == null || val.isEmpty ? 'Required' : null,
+      validator: (val) {
+        if (!required) return null;
+        final value = val?.trim() ?? '';
+        return value.isEmpty ? 'Required' : null;
+      },
     );
   }
 }

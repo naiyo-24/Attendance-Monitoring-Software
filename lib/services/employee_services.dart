@@ -5,10 +5,7 @@ import 'api_url.dart';
 
 class EmployeeService {
   final Dio _dio = Dio(
-    BaseOptions(
-      baseUrl: baseUrl,
-      headers: {'Accept': 'application/json'},
-    ),
+    BaseOptions(baseUrl: baseUrl, headers: {'Accept': 'application/json'}),
   )..interceptors.add(PrettyDioLogger());
 
   Future<Employee> createEmployee({
@@ -16,21 +13,39 @@ class EmployeeService {
     required Employee employee,
     String? profilePhotoPath,
   }) async {
-    final formData = FormData.fromMap({
+    final payload = <String, dynamic>{
       'admin_id': adminId,
       'full_name': employee.name,
       'phone_no': employee.phone,
-      'email': employee.email,
-      'address': employee.address,
-      'designation': employee.designation,
       'password': employee.password,
-      'bank_account_no': employee.accountNo,
-      'bank_name': employee.bankName,
-      'branch_name': employee.branchName,
-      'ifsc_code': employee.ifsc,
-      if (profilePhotoPath != null)
-        'profile_photo': await MultipartFile.fromFile(profilePhotoPath),
-    });
+    };
+
+    final email = employee.email.trim();
+    if (email.isNotEmpty) payload['email'] = email;
+
+    final address = employee.address.trim();
+    if (address.isNotEmpty) payload['address'] = address;
+
+    final designation = employee.designation.trim();
+    if (designation.isNotEmpty) payload['designation'] = designation;
+
+    final bankAccountNo = employee.accountNo.trim();
+    if (bankAccountNo.isNotEmpty) payload['bank_account_no'] = bankAccountNo;
+
+    final bankName = employee.bankName.trim();
+    if (bankName.isNotEmpty) payload['bank_name'] = bankName;
+
+    final branchName = employee.branchName.trim();
+    if (branchName.isNotEmpty) payload['branch_name'] = branchName;
+
+    final ifscCode = employee.ifsc.trim();
+    if (ifscCode.isNotEmpty) payload['ifsc_code'] = ifscCode;
+
+    if (profilePhotoPath != null) {
+      payload['profile_photo'] = await MultipartFile.fromFile(profilePhotoPath);
+    }
+
+    final formData = FormData.fromMap(payload);
     final response = await _dio.post(createEmployeeEndpoint, data: formData);
     if (response.statusCode == 200 || response.statusCode == 201) {
       return employee;
@@ -55,20 +70,40 @@ class EmployeeService {
     required Employee employee,
     String? profilePhotoPath,
   }) async {
-    final formData = FormData.fromMap({
+    final payload = <String, dynamic>{
       'full_name': employee.name,
       'phone_no': employee.phone,
-      'email': employee.email,
-      'address': employee.address,
-      'designation': employee.designation,
-      'password': employee.password,
-      'bank_account_no': employee.accountNo,
-      'bank_name': employee.bankName,
-      'branch_name': employee.branchName,
-      'ifsc_code': employee.ifsc,
-      if (profilePhotoPath != null)
-        'profile_photo': await MultipartFile.fromFile(profilePhotoPath),
-    });
+    };
+
+    final email = employee.email.trim();
+    if (email.isNotEmpty) payload['email'] = email;
+
+    final address = employee.address.trim();
+    if (address.isNotEmpty) payload['address'] = address;
+
+    final designation = employee.designation.trim();
+    if (designation.isNotEmpty) payload['designation'] = designation;
+
+    final password = employee.password.trim();
+    if (password.isNotEmpty) payload['password'] = password;
+
+    final bankAccountNo = employee.accountNo.trim();
+    if (bankAccountNo.isNotEmpty) payload['bank_account_no'] = bankAccountNo;
+
+    final bankName = employee.bankName.trim();
+    if (bankName.isNotEmpty) payload['bank_name'] = bankName;
+
+    final branchName = employee.branchName.trim();
+    if (branchName.isNotEmpty) payload['branch_name'] = branchName;
+
+    final ifscCode = employee.ifsc.trim();
+    if (ifscCode.isNotEmpty) payload['ifsc_code'] = ifscCode;
+
+    if (profilePhotoPath != null) {
+      payload['profile_photo'] = await MultipartFile.fromFile(profilePhotoPath);
+    }
+
+    final formData = FormData.fromMap(payload);
     final response = await _dio.put(
       updateEmployeeByAdminEndpoint(employeeId, adminId),
       data: formData,
@@ -84,7 +119,9 @@ class EmployeeService {
     required int employeeId,
     required int adminId,
   }) async {
-    final response = await _dio.delete(deleteEmployeeByAdminEndpoint(employeeId, adminId));
+    final response = await _dio.delete(
+      deleteEmployeeByAdminEndpoint(employeeId, adminId),
+    );
     if (response.statusCode != 200) {
       throw Exception('Failed to delete employee');
     }
