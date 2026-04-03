@@ -9,12 +9,14 @@ import '../../providers/auth_provider.dart';
 import '../../notifiers/location_matrix_notifier.dart';
 
 class MatrixCard extends ConsumerWidget {
+  final int storeNumber;
   final String latitude;
   final String longitude;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
   const MatrixCard({
     super.key,
+    required this.storeNumber,
     required this.latitude,
     required this.longitude,
     required this.onEdit,
@@ -61,6 +63,14 @@ class MatrixCard extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Text(
+                        'Store $storeNumber',
+                        style: kHeaderTextStyle(context).copyWith(
+                          fontSize: 20,
+                          color: kBrown,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
                       Row(
                         children: [
                           Icon(Iconsax.global, color: kBrown, size: 18),

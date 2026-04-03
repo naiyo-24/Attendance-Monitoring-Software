@@ -128,6 +128,7 @@ class _LocationMatrixScreenState extends ConsumerState<LocationMatrixScreen> {
                         itemBuilder: (context, index) {
                           final matrix = matrixNotifier.matrices[index];
                           return MatrixCard(
+                            storeNumber: index + 1,
                             latitude: matrix.latitude.toString(),
                             longitude: matrix.longitude.toString(),
                             onEdit: () => openAddEditMatrix(index: index),
