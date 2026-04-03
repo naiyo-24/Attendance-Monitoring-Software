@@ -28,8 +28,14 @@ class _CalendarCardState extends State<CalendarCard> {
     final attendanceList = context.watch<AttendanceNotifier>().attendanceList;
     final Map<DateTime, List<Attendance>> events = {};
     for (final att in attendanceList) {
-      final date = DateTime.parse(att.date);
-      events.putIfAbsent(date, () => []).add(att);
+      final parsed =
+          DateTime.tryParse(att.date) ??
+          DateTime.tryParse(att.date.split('T').first) ??
+          DateTime.tryParse(att.date.split(' ').first);
+      if (parsed == null) continue;
+      final local = parsed.toLocal();
+      final day = DateTime(local.year, local.month, local.day);
+      events.putIfAbsent(day, () => []).add(att);
     }
 
     return Card(
