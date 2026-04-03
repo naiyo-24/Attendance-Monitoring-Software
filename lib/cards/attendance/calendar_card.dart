@@ -140,12 +140,17 @@ class _CalendarCardState extends State<CalendarCard> {
                     )] ??
                     [];
                 if (attList.isNotEmpty) {
+                  final attendanceNotifier = context.read<AttendanceNotifier>();
                   showModalBottomSheet(
                     context: context,
-                    builder: (_) => AttendanceDetailsCard(
-                      attendance: attList.first,
-                      adminId: widget.adminId,
-                    ),
+                    builder: (_) =>
+                        ChangeNotifierProvider<AttendanceNotifier>.value(
+                          value: attendanceNotifier,
+                          child: AttendanceDetailsCard(
+                            attendance: attList.first,
+                            adminId: widget.adminId,
+                          ),
+                        ),
                     isScrollControlled: true,
                     backgroundColor: Colors.transparent,
                   );

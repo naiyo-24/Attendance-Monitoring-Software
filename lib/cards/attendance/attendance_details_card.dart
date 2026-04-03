@@ -185,13 +185,14 @@ class AttendanceDetailsCard extends StatelessWidget {
                             : () async {
                                 final notifier = context
                                     .read<AttendanceNotifier>();
-                                final navigator = Navigator.of(context);
-                                await notifier.updateAttendanceStatus(
-                                  attendanceId: attendance.attendanceId,
-                                  adminId: adminId,
-                                  status: AttendanceStatus.present,
-                                );
-                                navigator.pop();
+                                final ok = await notifier
+                                    .updateAttendanceStatus(
+                                      attendanceId: attendance.attendanceId,
+                                      adminId: adminId,
+                                      status: AttendanceStatus.present,
+                                    );
+                                if (!context.mounted) return;
+                                if (ok) Navigator.of(context).pop();
                               },
                         child: const Text('Mark as Present'),
                       ),
@@ -211,13 +212,14 @@ class AttendanceDetailsCard extends StatelessWidget {
                             : () async {
                                 final notifier = context
                                     .read<AttendanceNotifier>();
-                                final navigator = Navigator.of(context);
-                                await notifier.updateAttendanceStatus(
-                                  attendanceId: attendance.attendanceId,
-                                  adminId: adminId,
-                                  status: AttendanceStatus.absent,
-                                );
-                                navigator.pop();
+                                final ok = await notifier
+                                    .updateAttendanceStatus(
+                                      attendanceId: attendance.attendanceId,
+                                      adminId: adminId,
+                                      status: AttendanceStatus.absent,
+                                    );
+                                if (!context.mounted) return;
+                                if (ok) Navigator.of(context).pop();
                               },
                         child: const Text('Mark as Absent'),
                       ),
