@@ -25,6 +25,8 @@ class MyNotificationService {
   final FlutterLocalNotificationsPlugin _localNotifications =
       FlutterLocalNotificationsPlugin();
 
+  static const String _webVapidKey = String.fromEnvironment('FCM_VAPID_KEY');
+
   bool _localInitialized = false;
   bool _listenersAttached = false;
 
@@ -56,30 +58,51 @@ class MyNotificationService {
 
     _listenersAttached = true;
 
+    // Ensures the browser/device is registered and we have a token.
+    // On web, a VAPID key is required.
+    try {
+      final token = await _messaging.getToken(
+        vapidKey: kIsWeb && _webVapidKey.trim().isNotEmpty
+            ? _webVapidKey.trim()
+            : null,
+      );
+
+      if (kDebugMode) {
+        if (kIsWeb && _webVapidKey.trim().isEmpty) {
+          debugPrint(
+            'FCM web requires a VAPID key. Run: flutter run -d chrome --dart-define=FCM_VAPID_KEY=<YOUR_KEY>',
+          );
+        }
+        debugPrint('FCM token: $token');
+      }
+    } catch (e) {
+      debugPrint('Failed to get FCM token: $e');
+    }
+
     FirebaseMessaging.onMessage.listen((message) async {
+      if (kDebugMode) {
+        debugPrint('FCM onMessage: ${message.messageId}');
+      }
       final model = _mapRemoteMessage(message);
       onReceive(model);
       await _showLocalNotification(model);
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
+      if (kDebugMode) {
+        debugPrint('FCM onMessageOpenedApp: ${message.messageId}');
+      }
       final model = _mapRemoteMessage(message);
       onReceive(model);
     });
 
     final initial = await _messaging.getInitialMessage();
     if (initial != null) {
+      if (kDebugMode) {
+        debugPrint('FCM getInitialMessage: ${initial.messageId}');
+      }
       final model = _mapRemoteMessage(initial);
       onReceive(model);
-    }
-
-    if (kDebugMode) {
-      try {
-        final token = await _messaging.getToken();
-        debugPrint('FCM token: $token');
-      } catch (e) {
-        debugPrint('Failed to get FCM token: $e');
-      }
     }
   }
 
@@ -138,12 +161,14 @@ class MyNotificationService {
   }
 
   Future<void> _requestNotificationPermissions() async {
-    if (kIsWeb) return;
-
     try {
       await _messaging.requestPermission(alert: true, badge: true, sound: true);
     } catch (_) {
       // Best effort.
+    }
+
+    if (kIsWeb) {
+      return;
     }
 
     try {
