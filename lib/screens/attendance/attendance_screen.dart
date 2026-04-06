@@ -6,6 +6,7 @@ import '../../utils/attendance_download_pdf.dart';
 import '../../notifiers/attendance_notifier.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';
+import '../../widgets/loader.dart';
 import '../../widgets/side_nav_bar.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/employee_provider.dart';
@@ -56,87 +57,159 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
     return ChangeNotifierProvider<AttendanceNotifier>.value(
       value: _attendanceNotifier,
       child: Scaffold(
-        backgroundColor: kWhiteGrey,
         drawer: adminUser == null ? null : SideNavBar(adminUser: adminUser),
         appBar: const PremiumAppBar(
           title: 'Attendance',
           subtitle: 'Employee attendance records',
         ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+        body: Container(
+          width: double.infinity,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [kWhite, kWhiteGrey],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(18, 10, 18, 18),
+              child: Column(
                 children: [
-                  OutlinedButton.icon(
-                    icon: const Icon(Icons.download, size: 20),
-                    label: const Text('Download Attendance Sheet'),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: kBrown,
-                      side: BorderSide(color: kBrown.withAlpha(40)),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(24),
+                    child: Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: kWhite.withAlpha(190),
+                        borderRadius: BorderRadius.circular(24),
+                        border: Border.all(
+                          color: kBlack.withAlpha((0.06 * 255).toInt()),
+                          width: 1.2,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: kBlack.withAlpha((0.05 * 255).toInt()),
+                            blurRadius: 28,
+                            offset: const Offset(0, 14),
+                          ),
+                        ],
                       ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 18,
-                        vertical: 10,
-                      ),
-                      textStyle: kDescriptionTextStyle(
-                        context,
-                      ).copyWith(fontWeight: FontWeight.bold),
-                    ),
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) => Center(
-                          child: Material(
-                            color: Colors.transparent,
-                            child: Container(
-                              constraints: const BoxConstraints(maxWidth: 420),
-                              child: DownloadSheet(
-                                employees: employees,
-                                adminId: adminId ?? 0,
+                      child: Padding(
+                        padding: const EdgeInsets.all(14),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'Attendance Sheet',
+                                style: kHeaderTextStyle(context).copyWith(
+                                  fontSize: Responsive.fontSize(context, 16),
+                                  color: kBrown,
+                                ),
                               ),
                             ),
-                          ),
+                            OutlinedButton.icon(
+                              icon: const Icon(Icons.download, size: 20),
+                              label: const Text('Download'),
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: kBrown,
+                                side: BorderSide(
+                                  color: kBrown.withAlpha((0.16 * 255).toInt()),
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 12,
+                                ),
+                                textStyle: kCaptionTextStyle(
+                                  context,
+                                ).copyWith(fontWeight: FontWeight.w900),
+                              ),
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => Center(
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      child: Container(
+                                        constraints: const BoxConstraints(
+                                          maxWidth: 420,
+                                        ),
+                                        child: DownloadSheet(
+                                          employees: employees,
+                                          adminId: adminId ?? 0,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
                         ),
-                      );
-                    },
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  Expanded(
+                    child: employeeNotifier.isLoading && employees.isEmpty
+                        ? const AttendX24Loader(text: 'Loading employees…')
+                        : employeeNotifier.error != null
+                            ? Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(14),
+                                  child: Text(
+                                    employeeNotifier.error!,
+                                    textAlign: TextAlign.center,
+                                    style: kCaptionTextStyle(context).copyWith(
+                                      color: kerror,
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : Column(
+                                children: [
+                                  FilterCard(
+                                    adminId: adminId ?? 0,
+                                    employees: employees,
+                                    onEmployeeSelected: (id) {
+                                      setState(
+                                        () => selectedEmployeeId = id,
+                                      );
+                                    },
+                                  ),
+                                  const SizedBox(height: 14),
+                                  Expanded(
+                                    child: selectedEmployeeId != null &&
+                                            adminId != null
+                                        ? CalendarCard(
+                                            adminId: adminId,
+                                            employeeId: selectedEmployeeId!,
+                                          )
+                                        : Center(
+                                            child: Text(
+                                              'Select an employee to view attendance.',
+                                              textAlign: TextAlign.center,
+                                              style: kCaptionTextStyle(
+                                                context,
+                                              ).copyWith(
+                                                fontWeight: FontWeight.w800,
+                                                color: kBrown.withAlpha(
+                                                  (0.72 * 255).toInt(),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                  ),
+                                ],
+                              ),
                   ),
                 ],
               ),
-              const SizedBox(height: 10),
-              if (employeeNotifier.isLoading)
-                const Center(child: CircularProgressIndicator()),
-              if (employeeNotifier.error != null)
-                Text(
-                  'Error: ${employeeNotifier.error}',
-                  style: const TextStyle(color: Colors.red),
-                ),
-              if (!employeeNotifier.isLoading && employeeNotifier.error == null)
-                FilterCard(
-                  adminId: adminId ?? 0,
-                  employees: employees,
-                  onEmployeeSelected: (id) {
-                    setState(() => selectedEmployeeId = id);
-                  },
-                ),
-              const SizedBox(height: 16),
-              if (selectedEmployeeId != null && adminId != null)
-                Expanded(
-                  child: CalendarCard(
-                    adminId: adminId,
-                    employeeId: selectedEmployeeId!,
-                  ),
-                )
-              else
-                const Expanded(
-                  child: Center(
-                    child: Text('Select an employee to view attendance.'),
-                  ),
-                ),
-            ],
+            ),
           ),
         ),
       ),

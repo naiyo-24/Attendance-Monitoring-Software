@@ -1,3 +1,4 @@
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -5,65 +6,112 @@ import '../../notifiers/attendance_notifier.dart';
 import '../../theme/app_theme.dart';
 
 class FilterCard extends StatefulWidget {
-	final int adminId;
-	final List<Map<String, dynamic>> employees; // [{id: 1, name: 'John'}, ...]
-	final void Function(int employeeId)? onEmployeeSelected;
-	const FilterCard({required this.adminId, required this.employees, this.onEmployeeSelected, super.key});
+  final int adminId;
+  final List<Map<String, dynamic>> employees; // [{id: 1, name: 'John'}, ...]
+  final void Function(int employeeId)? onEmployeeSelected;
+  const FilterCard({
+    required this.adminId,
+    required this.employees,
+    this.onEmployeeSelected,
+    super.key,
+  });
 
-	@override
-	State<FilterCard> createState() => _FilterCardState();
+  @override
+  State<FilterCard> createState() => _FilterCardState();
 }
 
 class _FilterCardState extends State<FilterCard> {
-	int? selectedEmployeeId;
+  int? selectedEmployeeId;
 
-	@override
-	Widget build(BuildContext context) {
-		return Card(
-			color: kWhite,
-			elevation: 3,
-			shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-			child: Padding(
-				padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
-				child: Row(
-					children: [
-						Text('Select Employee:', style: kCaptionTextStyle(context)),
-						const SizedBox(width: 16),
-						Expanded(
-							child: Container(
-								padding: const EdgeInsets.symmetric(horizontal: 12),
-								decoration: BoxDecoration(
-									color: kWhiteGrey,
-									borderRadius: BorderRadius.circular(12),
-									border: Border.all(color: kBrown.withAlpha(2)),
-								),
-								child: DropdownButtonHideUnderline(
-									child: DropdownButton<int>(
-										value: selectedEmployeeId,
-										hint: Text('SelectEmployee', style: kDescriptionTextStyle(context)),
-										isExpanded: true,
-										items: widget.employees.map((e) {
-											return DropdownMenuItem<int>(
-												value: e['id'],
-												child: Text(e['name'], style: kDescriptionTextStyle(context)),
-											);
-										}).toList(),
-										onChanged: (val) {
-											setState(() => selectedEmployeeId = val);
-											if (val != null) {
-												context.read<AttendanceNotifier>().fetchAttendance(widget.adminId, val);
-												if (widget.onEmployeeSelected != null) {
-													widget.onEmployeeSelected!(val);
-												}
-											}
-										},
-									),
-								),
-							),
-						),
-					],
-				),
-			),
-		);
-	}
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(24),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: kWhite.withAlpha(190),
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(
+              color: kBlack.withAlpha((0.06 * 255).toInt()),
+              width: 1.2,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: kBlack.withAlpha((0.05 * 255).toInt()),
+                blurRadius: 28,
+                offset: const Offset(0, 14),
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Select employee',
+                  style: kHeaderTextStyle(context).copyWith(
+                    fontSize: Responsive.fontSize(context, 16),
+                    color: kBrown,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                DropdownButtonFormField<int>(
+                  initialValue: selectedEmployeeId,
+                  isExpanded: true,
+                  hint: Text(
+                    'Choose an employee',
+                    style: kCaptionTextStyle(context).copyWith(
+                      color: kBrown.withAlpha((0.72 * 255).toInt()),
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: kWhiteGrey.withAlpha(170),
+                    prefixIcon: Icon(
+                      Icons.badge_outlined,
+                      color: kBrown.withAlpha((0.82 * 255).toInt()),
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(18),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                  items: widget.employees
+                      .map(
+                        (e) => DropdownMenuItem<int>(
+                          value: e['id'] as int?,
+                          child: Text(
+                            (e['name'] ?? '').toString(),
+                            overflow: TextOverflow.ellipsis,
+                            style: kCaptionTextStyle(context).copyWith(
+                              fontWeight: FontWeight.w900,
+                              color: kBrown,
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (val) {
+                    setState(() => selectedEmployeeId = val);
+                    if (val != null) {
+                      context.read<AttendanceNotifier>().fetchAttendance(
+                        widget.adminId,
+                        val,
+                      );
+                      widget.onEmployeeSelected?.call(val);
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
