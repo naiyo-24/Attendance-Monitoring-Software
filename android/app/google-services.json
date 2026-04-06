@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "649534744462",
+    "project_id": "attendx24-1f890",
+    "storage_bucket": "attendx24-1f890.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:649534744462:android:afb897b8118ef2a0bda6df",
+        "android_client_info": {
+          "package_name": "com.example.attendance_admin_panel"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwTfAyrpw6_XGohsm2xuidkk4BZeLI2EI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:649534744462:android:a81f6c6796e6fba6bda6df",
+        "android_client_info": {
+          "package_name": "com.example.attendance_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwTfAyrpw6_XGohsm2xuidkk4BZeLI2EI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:649534744462:android:fb33893d2db41227bda6df",
+        "android_client_info": {
+          "package_name": "com.naiyo24.attendx24"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwTfAyrpw6_XGohsm2xuidkk4BZeLI2EI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
