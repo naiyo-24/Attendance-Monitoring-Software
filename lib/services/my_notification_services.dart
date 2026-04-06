@@ -27,6 +27,22 @@ class MyNotificationService {
 
   static const String _webVapidKey = String.fromEnvironment('FCM_VAPID_KEY');
 
+  String? _effectiveWebVapidKeyOrNull() {
+    if (!kIsWeb) return null;
+    final key = _webVapidKey.trim();
+    if (key.isEmpty) return null;
+
+    // Common mistake: pasting the FCM registration token here.
+    if (key.contains(':')) return null;
+
+    // VAPID keys are base64url strings (no spaces, typically 80-90 chars).
+    final base64Url = RegExp(r'^[A-Za-z0-9_-]+$');
+    if (!base64Url.hasMatch(key)) return null;
+    if (key.length < 40) return null;
+
+    return key;
+  }
+
   bool _localInitialized = false;
   bool _listenersAttached = false;
 
@@ -61,16 +77,16 @@ class MyNotificationService {
     // Ensures the browser/device is registered and we have a token.
     // On web, a VAPID key is required.
     try {
-      final token = await _messaging.getToken(
-        vapidKey: kIsWeb && _webVapidKey.trim().isNotEmpty
-            ? _webVapidKey.trim()
-            : null,
-      );
+      final effectiveVapidKey = _effectiveWebVapidKeyOrNull();
+      final token = await _messaging.getToken(vapidKey: effectiveVapidKey);
 
       if (kDebugMode) {
-        if (kIsWeb && _webVapidKey.trim().isEmpty) {
+        if (kIsWeb && effectiveVapidKey == null) {
           debugPrint(
-            'FCM web requires a VAPID key. Run: flutter run -d chrome --dart-define=FCM_VAPID_KEY=<YOUR_KEY>',
+            'FCM web requires a valid VAPID key (Web Push certificates → Key pair).',
+          );
+          debugPrint(
+            'Do NOT paste the FCM token. Run: flutter run -d chrome --dart-define=FCM_VAPID_KEY=<WEB_PUSH_KEY_PAIR>',
           );
         }
         debugPrint('FCM token: $token');
