@@ -165,6 +165,12 @@ class SideNavBar extends StatelessWidget {
                 'Notification Management',
                 '/notification-management',
               ),
+              _drawerItem(
+                context,
+                Iconsax.notification,
+                'My Notifications',
+                '/my-notifications',
+              ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(14, 12, 14, 8),
                 child: Divider(
@@ -176,7 +182,7 @@ class SideNavBar extends StatelessWidget {
                 context,
                 Iconsax.logout,
                 'Log Out',
-                '/logout',
+                '/splash',
                 color: kerror,
               ),
             ],
