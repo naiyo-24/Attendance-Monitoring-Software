@@ -47,7 +47,7 @@ class _SalarySlipScreenState extends ConsumerState<SalarySlipScreen> {
 			(s) => s.employee.employeeId == emp.employeeId,
 			orElse: () => SalarySlip(employee: emp),
 		);
-		final result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
+		final result = await FilePicker.pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
 		if (result != null) {
 			if (result.files.single.bytes != null) {
 				// Web: use bytes
