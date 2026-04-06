@@ -1,9 +1,12 @@
+import 'dart:ui';
+
 import 'package:attendance_admin_panel/widgets/side_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../models/location_matrix.dart';
 import '../../widgets/app_bar.dart';
+import '../../widgets/loader.dart';
 import '../../theme/app_theme.dart';
 import '../../cards/location_matrix/matrix_card.dart';
 import '../../cards/location_matrix/add_edit_matrix_card.dart';
@@ -100,68 +103,113 @@ class _LocationMatrixScreenState extends ConsumerState<LocationMatrixScreen> {
             end: Alignment.bottomRight,
           ),
         ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        style: kPremiumButtonStyle(context).copyWith(
-                          backgroundColor: WidgetStateProperty.all(kGreen),
-                          foregroundColor: WidgetStateProperty.all(kWhite),
-                          padding: WidgetStateProperty.all(
-                            const EdgeInsets.symmetric(vertical: 20),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(18, 10, 18, 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(28),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                    child: Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: kWhite.withAlpha(85),
+                        borderRadius: BorderRadius.circular(28),
+                        border: Border.all(color: kWhiteGrey, width: 1.5),
+                        boxShadow: [
+                          BoxShadow(
+                            color: kBlack.withAlpha((0.05 * 255).toInt()),
+                            blurRadius: 28,
+                            offset: const Offset(0, 14),
                           ),
-                          textStyle: WidgetStateProperty.all(
-                            kHeaderTextStyle(context).copyWith(fontSize: 18),
-                          ),
-                          elevation: WidgetStateProperty.all(6),
+                        ],
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 18,
+                          vertical: 16,
                         ),
-                        icon: const Icon(Iconsax.add, size: 26),
-                        label: const Text('Create Location Matrix'),
-                        onPressed: () => openAddEditMatrix(),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton.icon(
+                            style: kPremiumButtonStyle(context).copyWith(
+                              backgroundColor: WidgetStateProperty.all(kGreen),
+                              foregroundColor: WidgetStateProperty.all(kWhite),
+                              padding: WidgetStateProperty.all(
+                                const EdgeInsets.symmetric(vertical: 18),
+                              ),
+                              textStyle: WidgetStateProperty.all(
+                                kHeaderTextStyle(context).copyWith(
+                                  fontSize: Responsive.fontSize(context, 16),
+                                  color: kWhite,
+                                ),
+                              ),
+                              elevation: WidgetStateProperty.all(10),
+                              shadowColor: WidgetStateProperty.all(
+                                kBlack.withAlpha(40),
+                              ),
+                            ),
+                            icon: const Icon(Iconsax.add, size: 24),
+                            label: const Text('Create Location Matrix'),
+                            onPressed: () => openAddEditMatrix(),
+                          ),
+                        ),
                       ),
                     ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 24),
-              Expanded(
-                child: matrixNotifier.isLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : ListView.separated(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 0,
-                        ),
-                        itemCount: matrixNotifier.matrices.length,
-                        separatorBuilder: (_, _) => const SizedBox(height: 20),
-                        itemBuilder: (context, index) {
-                          final matrix = matrixNotifier.matrices[index];
-                          return MatrixCard(
-                            storeNumber: index + 1,
-                            latitude: matrix.latitude.toString(),
-                            longitude: matrix.longitude.toString(),
-                            onEdit: () => openAddEditMatrix(index: index),
-                            onDelete: () => deleteMatrix(index),
-                          );
-                        },
-                      ),
-              ),
-              if (matrixNotifier.error != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 12.0),
-                  child: Text(
-                    matrixNotifier.error!,
-                    style: TextStyle(color: kerror),
                   ),
                 ),
-            ],
+                const SizedBox(height: 18),
+                Expanded(
+                  child: matrixNotifier.isLoading
+                      ? const AttendX24Loader(
+                          text: 'Loading location matrices…',
+                        )
+                      : ListView.separated(
+                          padding: const EdgeInsets.only(bottom: 18),
+                          itemCount: matrixNotifier.matrices.length,
+                          separatorBuilder: (_, _) =>
+                              const SizedBox(height: 16),
+                          itemBuilder: (context, index) {
+                            final matrix = matrixNotifier.matrices[index];
+                            return MatrixCard(
+                              storeNumber: index + 1,
+                              latitude: matrix.latitude.toString(),
+                              longitude: matrix.longitude.toString(),
+                              onEdit: () => openAddEditMatrix(index: index),
+                              onDelete: () => deleteMatrix(index),
+                            );
+                          },
+                        ),
+                ),
+                if (matrixNotifier.error != null)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 14),
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 12,
+                      ),
+                      decoration: BoxDecoration(
+                        color: kerror.withAlpha((0.08 * 255).toInt()),
+                        borderRadius: BorderRadius.circular(18),
+                        border: Border.all(
+                          color: kerror.withAlpha((0.18 * 255).toInt()),
+                        ),
+                      ),
+                      child: Text(
+                        matrixNotifier.error!,
+                        style: kCaptionTextStyle(
+                          context,
+                        ).copyWith(color: kerror, fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
       ),

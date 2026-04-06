@@ -53,33 +53,77 @@ class _AddEditMatrixCardState extends State<AddEditMatrixCard> {
 
   @override
   Widget build(BuildContext context) {
-    // To remove the white background above the bottom sheet, ensure you set
-    // backgroundColor: Colors.transparent in showModalBottomSheet.
-    // This widget itself should not have any top padding or background outside the card.
+    final isCreate = widget.latitude == null;
+
+    Widget coordLine({required String label, required String value}) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        decoration: BoxDecoration(
+          color: kWhiteGrey.withAlpha(150),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: kBlack.withAlpha((0.05 * 255).toInt())),
+        ),
+        child: Row(
+          children: [
+            const Icon(Iconsax.global, color: kBrown, size: 18),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: kCaptionTextStyle(context).copyWith(
+                      color: kBrown.withAlpha((0.78 * 255).toInt()),
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    value,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: kHeaderTextStyle(context).copyWith(
+                      fontSize: Responsive.fontSize(context, 16),
+                      color: kBlack,
+                      letterSpacing: 0.2,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return Align(
       alignment: Alignment.bottomCenter,
       child: FractionallySizedBox(
         widthFactor: 1,
         child: Container(
-          constraints: const BoxConstraints(maxWidth: 420, minHeight: 0, maxHeight: 320),
+          constraints: BoxConstraints(
+            maxWidth: 520,
+            maxHeight: MediaQuery.of(context).size.height * 0.70,
+          ),
           decoration: BoxDecoration(
-            color: kWhite.withAlpha(95),
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+            color: kWhite,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
             boxShadow: [
               BoxShadow(
-                color: kBrown.withAlpha(9),
-                blurRadius: 32,
-                offset: const Offset(0, 12),
+                color: kBlack.withAlpha((0.10 * 255).toInt()),
+                blurRadius: 40,
+                offset: const Offset(0, -6),
               ),
             ],
             border: Border.all(color: kWhiteGrey, width: 1.5),
           ),
           child: Padding(
             padding: EdgeInsets.only(
-              left: 24,
-              right: 24,
-              top: 18,
-              bottom: MediaQuery.of(context).viewInsets.bottom + 8,
+              left: 22,
+              right: 22,
+              top: 14,
+              bottom: MediaQuery.of(context).viewInsets.bottom + 16,
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -91,74 +135,83 @@ class _AddEditMatrixCardState extends State<AddEditMatrixCard> {
                     height: 4,
                     margin: const EdgeInsets.only(bottom: 14),
                     decoration: BoxDecoration(
-                      color: kBrown.withAlpha(18),
+                      color: kBlack.withAlpha((0.10 * 255).toInt()),
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
                 ),
                 Row(
                   children: [
-                    Icon(widget.latitude == null ? Iconsax.add : Iconsax.edit, color: kGreen, size: 22),
-                    const SizedBox(width: 8),
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: kWhiteGrey.withAlpha(140),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: kBlack.withAlpha((0.04 * 255).toInt()),
+                        ),
+                      ),
+                      child: Icon(
+                        isCreate ? Iconsax.add : Iconsax.edit,
+                        color: kBlack,
+                        size: 22,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
                     Text(
-                      widget.latitude == null ? 'Create Location Matrix' : 'Edit Location Matrix',
-                      style: kHeaderTextStyle(context).copyWith(fontSize: 18),
+                      isCreate
+                          ? 'Create Location Matrix'
+                          : 'Edit Location Matrix',
+                      style: kHeaderTextStyle(context).copyWith(
+                        fontSize: Responsive.fontSize(context, 20),
+                        color: kBlack,
+                        letterSpacing: 0.2,
+                      ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 14),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(Iconsax.global, color: kBrown, size: 16),
-                              const SizedBox(width: 4),
-                              Text('Latitude', style: kTaglineTextStyle(context).copyWith(fontSize: 14)),
-                            ],
-                          ),
-                          Text(
-                            _latitude?.toStringAsFixed(6) ?? '-',
-                            style: kHeaderTextStyle(context).copyWith(fontSize: 14),
-                          ),
-                          const SizedBox(height: 8),
-                          Row(
-                            children: [
-                              Icon(Iconsax.global, color: kBrown, size: 16),
-                              const SizedBox(width: 4),
-                              Text('Longitude', style: kTaglineTextStyle(context).copyWith(fontSize: 14)),
-                            ],
-                          ),
-                          Text(
-                            _longitude?.toStringAsFixed(6) ?? '-',
-                            style: kHeaderTextStyle(context).copyWith(fontSize: 14),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    ElevatedButton.icon(
-                      style: kPremiumButtonStyle(context).copyWith(
-                        padding: WidgetStateProperty.all(
-                          const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                        ),
-                      ),
-                      onPressed: _pickLocation,
-                      icon: const Icon(Iconsax.map, size: 18),
-                      label: const Text('Pick'),
-                    ),
-                  ],
+                coordLine(
+                  label: 'Latitude',
+                  value: _latitude?.toStringAsFixed(6) ?? '-',
                 ),
-                const SizedBox(height: 18),
+                const SizedBox(height: 12),
+                coordLine(
+                  label: 'Longitude',
+                  value: _longitude?.toStringAsFixed(6) ?? '-',
+                ),
+                const SizedBox(height: 14),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    style: kPremiumButtonStyle(context).copyWith(
+                      backgroundColor: WidgetStateProperty.all(kWhiteGrey),
+                      foregroundColor: WidgetStateProperty.all(kBlack),
+                      elevation: WidgetStateProperty.all(0),
+                      padding: WidgetStateProperty.all(
+                        const EdgeInsets.symmetric(vertical: 14),
+                      ),
+                      textStyle: WidgetStateProperty.all(
+                        kCaptionTextStyle(
+                          context,
+                        ).copyWith(fontWeight: FontWeight.w800),
+                      ),
+                    ),
+                    onPressed: _pickLocation,
+                    icon: const Icon(Iconsax.map, size: 18),
+                    label: const Text('Pick Location From Map'),
+                  ),
+                ),
+                const SizedBox(height: 14),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(
                     style: kPremiumButtonStyle(context),
-                    icon: Icon(widget.latitude == null ? Iconsax.add : Iconsax.save_2, size: 18),
-                    label: Text(widget.latitude == null ? 'Create' : 'Save'),
+                    icon: Icon(
+                      isCreate ? Iconsax.add : Iconsax.save_2,
+                      size: 18,
+                    ),
+                    label: Text(isCreate ? 'Create' : 'Save'),
                     onPressed: (_latitude != null && _longitude != null)
                         ? () {
                             widget.onSave(

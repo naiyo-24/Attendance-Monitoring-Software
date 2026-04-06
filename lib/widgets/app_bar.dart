@@ -15,13 +15,13 @@ class PremiumAppBar extends StatelessWidget implements PreferredSizeWidget {
     super.key,
   });
   @override
-  Size get preferredSize => const Size.fromHeight(92);
+  Size get preferredSize => const Size.fromHeight(104);
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(22),
           child: BackdropFilter(
@@ -45,7 +45,7 @@ class PremiumAppBar extends StatelessWidget implements PreferredSizeWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16,
-                  vertical: 8,
+                  vertical: 6,
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -85,6 +85,7 @@ class PremiumAppBar extends StatelessWidget implements PreferredSizeWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
                             title,
@@ -92,12 +93,13 @@ class PremiumAppBar extends StatelessWidget implements PreferredSizeWidget {
                             overflow: TextOverflow.ellipsis,
                             style: kHeaderTextStyle(context).copyWith(
                               color: kBlack,
-                              fontSize: Responsive.fontSize(context, 22),
+                              fontSize: Responsive.fontSize(context, 20),
                               fontWeight: FontWeight.w800,
                               letterSpacing: 0.2,
+                              height: 1.05,
                             ),
                           ),
-                          const SizedBox(height: 2),
+                          const SizedBox(height: 1),
                           Text(
                             subtitle,
                             maxLines: 1,
@@ -105,6 +107,8 @@ class PremiumAppBar extends StatelessWidget implements PreferredSizeWidget {
                             style: kCaptionTextStyle(context).copyWith(
                               color: kBrown.withAlpha((0.80 * 255).toInt()),
                               fontWeight: FontWeight.w700,
+                              fontSize: Responsive.fontSize(context, 13),
+                              height: 1.05,
                             ),
                           ),
                         ],
