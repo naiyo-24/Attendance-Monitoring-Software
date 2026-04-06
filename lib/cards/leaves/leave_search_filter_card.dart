@@ -150,7 +150,7 @@ class _LeaveSearchFilterCardState extends ConsumerState<LeaveSearchFilterCard> {
             Expanded(
               child: _glassField(
                 child: DropdownButtonFormField<LeaveStatus?>(
-                  value: _selectedStatus,
+                  initialValue: _selectedStatus,
                   items: const [
                     DropdownMenuItem<LeaveStatus?>(
                       value: null,
