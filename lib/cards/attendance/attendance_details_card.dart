@@ -12,6 +12,7 @@ import 'break_time_details_card.dart';
 import '../../services/break_time_services.dart';
 import '../../models/break_time.dart';
 import '../../widgets/loader.dart';
+import '../../utils/attendance_ist_time.dart';
 
 class AttendanceDetailsCard extends StatelessWidget {
   final Attendance attendance;
@@ -22,53 +23,18 @@ class AttendanceDetailsCard extends StatelessWidget {
     super.key,
   });
 
-  DateTime? _tryParseDateTime(String? value) {
-    final v = value?.trim();
-    if (v == null || v.isEmpty) return null;
-    return DateTime.tryParse(v);
-  }
-
-  TimeOfDay? _tryParseTimeOfDay(String? value) {
-    final v = value?.trim();
-    if (v == null || v.isEmpty) return null;
-    final match = RegExp(r'^(\d{1,2}):(\d{2})(?::\d{2})?$').firstMatch(v);
-    if (match == null) return null;
-    final hour = int.tryParse(match.group(1) ?? '');
-    final minute = int.tryParse(match.group(2) ?? '');
-    if (hour == null || minute == null) return null;
-    if (hour < 0 || hour > 23 || minute < 0 || minute > 59) return null;
-    return TimeOfDay(hour: hour, minute: minute);
-  }
-
-  String _formatLocalDate(BuildContext context, String? value) {
-    final dt = _tryParseDateTime(value);
+  String _formatIstDate(BuildContext context, String? value) {
+    final dt = tryParseApiDateTimeAsIst(value);
     if (dt == null) {
       return value?.trim().isNotEmpty == true ? value!.trim() : '-';
     }
-    final local = dt.toLocal();
-    final dateOnly = DateTime(local.year, local.month, local.day);
+    final dateOnly = DateTime(dt.year, dt.month, dt.day);
     return MaterialLocalizations.of(context).formatFullDate(dateOnly);
   }
 
-  String _formatLocalTime(BuildContext context, String? value) {
-    final dt = _tryParseDateTime(value);
-    final localizations = MaterialLocalizations.of(context);
+  String _formatIstTime(BuildContext context, String? value) {
     final alwaysUse24Hour = MediaQuery.of(context).alwaysUse24HourFormat;
-    if (dt != null) {
-      final local = dt.toLocal();
-      return localizations.formatTimeOfDay(
-        TimeOfDay.fromDateTime(local),
-        alwaysUse24HourFormat: alwaysUse24Hour,
-      );
-    }
-    final time = _tryParseTimeOfDay(value);
-    if (time != null) {
-      return localizations.formatTimeOfDay(
-        time,
-        alwaysUse24HourFormat: alwaysUse24Hour,
-      );
-    }
-    return value?.trim().isNotEmpty == true ? value!.trim() : '-';
+    return formatIstTime(value, use24Hour: alwaysUse24Hour, showSeconds: true);
   }
 
   @override
@@ -86,7 +52,7 @@ class AttendanceDetailsCard extends StatelessWidget {
               : '$baseUrl/${attendance.checkOutPhoto!}')
         : null;
 
-    final attendanceDate = _tryParseDateTime(attendance.date)?.toLocal();
+    final attendanceDate = tryParseApiDateTimeAsIst(attendance.date);
 
     return Center(
       child: ClipRRect(
@@ -123,7 +89,7 @@ class AttendanceDetailsCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Date: ${_formatLocalDate(context, attendance.date)}',
+                      'Date: ${_formatIstDate(context, attendance.date)}',
                       style: kHeaderTextStyle(context).copyWith(fontSize: 18),
                     ),
                     const SizedBox(height: 12),
@@ -132,7 +98,7 @@ class AttendanceDetailsCard extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            'Check-in: ${_formatLocalTime(context, attendance.checkInTime)}',
+                            'Check-in: ${_formatIstTime(context, attendance.checkInTime)}',
                             style: kDescriptionTextStyle(context),
                           ),
                         ),
@@ -159,7 +125,7 @@ class AttendanceDetailsCard extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            'Check-out: ${_formatLocalTime(context, attendance.checkOutTime)}',
+                            'Check-out: ${_formatIstTime(context, attendance.checkOutTime)}',
                             style: kDescriptionTextStyle(context),
                           ),
                         ),
@@ -299,12 +265,13 @@ class AttendanceDetailsCard extends StatelessWidget {
                                 final breaks = snapshot.data ?? [];
                                 final date =
                                     attendanceDate ??
+                                    tryParseApiDateTimeAsIst(attendance.date) ??
                                     DateTime.tryParse(attendance.date) ??
                                     DateTime.parse(attendance.date);
                                 final dayBreaks = breaks.where((b) {
-                                  final breakIn = _tryParseDateTime(
+                                  final breakIn = tryParseApiDateTimeAsIst(
                                     b.breakInTime,
-                                  )?.toLocal();
+                                  );
                                   if (breakIn == null) return false;
                                   return breakIn.year == date.year &&
                                       breakIn.month == date.month &&

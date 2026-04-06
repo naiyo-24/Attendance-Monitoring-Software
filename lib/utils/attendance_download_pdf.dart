@@ -10,6 +10,7 @@ import '../services/attendance_services.dart';
 import '../services/break_time_services.dart';
 import '../models/break_time.dart';
 import '../widgets/loader.dart';
+import 'attendance_ist_time.dart';
 
 class DownloadSheet extends StatefulWidget {
   final List<Map<String, dynamic>> employees;
@@ -50,10 +51,13 @@ class _DownloadSheetState extends State<DownloadSheet> {
           );
       // Filter by selected month/year
       final filteredAttendance = attendanceList.where((a) {
-        final date = DateTime.tryParse(a.date);
-        return date != null &&
-            date.month == selectedMonth &&
-            date.year == selectedYear;
+        final dateIst =
+            tryParseApiDateTimeAsIst(a.date) ??
+            tryParseApiDateTimeAsIst(a.checkInTime) ??
+            DateTime.tryParse(a.date);
+        return dateIst != null &&
+            dateIst.month == selectedMonth &&
+            dateIst.year == selectedYear;
       }).toList();
 
       // Fetch all breaks for this employee
@@ -100,47 +104,57 @@ class _DownloadSheetState extends State<DownloadSheet> {
                 data: filteredAttendance.map((a) {
                   final breaks = breaksByAttendance[a.attendanceId] ?? [];
                   final breakIn = breaks.isNotEmpty
-                      ? (breaks.first.breakInTime ?? '-')
+                      ? formatIstTime(
+                          breaks.first.breakInTime,
+                          use24Hour: true,
+                          showSeconds: true,
+                        )
                       : '-';
                   final breakOut = breaks.isNotEmpty
-                      ? (breaks.last.breakOutTime ?? '-')
+                      ? formatIstTime(
+                          breaks.last.breakOutTime,
+                          use24Hour: true,
+                          showSeconds: true,
+                        )
                       : '-';
-                  final checkIn = a.checkInTime ?? '-';
-                  final checkOut = a.checkOutTime ?? '-';
+                  final checkIn = formatIstTime(
+                    a.checkInTime,
+                    use24Hour: true,
+                    showSeconds: true,
+                  );
+                  final checkOut = formatIstTime(
+                    a.checkOutTime,
+                    use24Hour: true,
+                    showSeconds: true,
+                  );
                   // Calculate total work hours (excluding breaks)
                   double totalHours = 0;
-                  if (a.checkInTime != null && a.checkOutTime != null) {
-                    final inTime = DateTime.tryParse(
-                      '${a.date} ${a.checkInTime}',
-                    );
-                    final outTime = DateTime.tryParse(
-                      '${a.date} ${a.checkOutTime}',
-                    );
-                    if (inTime != null &&
-                        outTime != null &&
-                        outTime.isAfter(inTime)) {
-                      totalHours = outTime.difference(inTime).inMinutes / 60.0;
-                      // Subtract break durations
-                      for (final br in breaks) {
-                        if (br.breakInTime != null && br.breakOutTime != null) {
-                          final bin = DateTime.tryParse(
-                            '${a.date} ${br.breakInTime}',
-                          );
-                          final bout = DateTime.tryParse(
-                            '${a.date} ${br.breakOutTime}',
-                          );
-                          if (bin != null &&
-                              bout != null &&
-                              bout.isAfter(bin)) {
-                            totalHours -= bout.difference(bin).inMinutes / 60.0;
-                          }
+                  final inTimeUtc = tryParseApiDateTimeAsUtc(a.checkInTime);
+                  final outTimeUtc = tryParseApiDateTimeAsUtc(a.checkOutTime);
+                  if (inTimeUtc != null &&
+                      outTimeUtc != null &&
+                      outTimeUtc.isAfter(inTimeUtc)) {
+                    totalHours =
+                        outTimeUtc.difference(inTimeUtc).inMinutes / 60.0;
+                    // Subtract break durations
+                    for (final br in breaks) {
+                      if (br.breakInTime != null && br.breakOutTime != null) {
+                        final binUtc = tryParseApiDateTimeAsUtc(br.breakInTime);
+                        final boutUtc = tryParseApiDateTimeAsUtc(
+                          br.breakOutTime,
+                        );
+                        if (binUtc != null &&
+                            boutUtc != null &&
+                            boutUtc.isAfter(binUtc)) {
+                          totalHours -=
+                              boutUtc.difference(binUtc).inMinutes / 60.0;
                         }
                       }
-                      if (totalHours < 0) totalHours = 0;
                     }
+                    if (totalHours < 0) totalHours = 0;
                   }
                   return [
-                    a.date,
+                    a.date.split('T').first,
                     checkIn,
                     checkOut,
                     breakIn,

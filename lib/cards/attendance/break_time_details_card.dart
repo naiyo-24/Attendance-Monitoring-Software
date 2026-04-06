@@ -4,48 +4,15 @@ import 'package:flutter/material.dart';
 import '../../models/break_time.dart';
 import '../../services/api_url.dart';
 import '../../theme/app_theme.dart';
+import '../../utils/attendance_ist_time.dart';
 
 class BreakTimeDetailsCard extends StatelessWidget {
   final List<BreakTime> breaks;
   const BreakTimeDetailsCard({required this.breaks, super.key});
 
-  DateTime? _tryParseDateTime(String? value) {
-    final v = value?.trim();
-    if (v == null || v.isEmpty) return null;
-    return DateTime.tryParse(v);
-  }
-
-  TimeOfDay? _tryParseTimeOfDay(String? value) {
-    final v = value?.trim();
-    if (v == null || v.isEmpty) return null;
-    final match = RegExp(r'^(\d{1,2}):(\d{2})(?::\d{2})?$').firstMatch(v);
-    if (match == null) return null;
-    final hour = int.tryParse(match.group(1) ?? '');
-    final minute = int.tryParse(match.group(2) ?? '');
-    if (hour == null || minute == null) return null;
-    if (hour < 0 || hour > 23 || minute < 0 || minute > 59) return null;
-    return TimeOfDay(hour: hour, minute: minute);
-  }
-
-  String _formatLocalTime(BuildContext context, String? value) {
-    final dt = _tryParseDateTime(value);
-    final localizations = MaterialLocalizations.of(context);
+  String _formatIstTime(BuildContext context, String? value) {
     final alwaysUse24Hour = MediaQuery.of(context).alwaysUse24HourFormat;
-    if (dt != null) {
-      final local = dt.toLocal();
-      return localizations.formatTimeOfDay(
-        TimeOfDay.fromDateTime(local),
-        alwaysUse24HourFormat: alwaysUse24Hour,
-      );
-    }
-    final time = _tryParseTimeOfDay(value);
-    if (time != null) {
-      return localizations.formatTimeOfDay(
-        time,
-        alwaysUse24HourFormat: alwaysUse24Hour,
-      );
-    }
-    return value?.trim().isNotEmpty == true ? value!.trim() : '-';
+    return formatIstTime(value, use24Hour: alwaysUse24Hour, showSeconds: true);
   }
 
   @override
@@ -146,7 +113,7 @@ class BreakTimeDetailsCard extends StatelessWidget {
                                       children: [
                                         Expanded(
                                           child: Text(
-                                            'Break In: ${_formatLocalTime(context, b.breakInTime)}',
+                                            'Break In: ${_formatIstTime(context, b.breakInTime)}',
                                             style:
                                                 kDescriptionTextStyle(
                                                   context,
@@ -189,7 +156,7 @@ class BreakTimeDetailsCard extends StatelessWidget {
                                       children: [
                                         Expanded(
                                           child: Text(
-                                            'Break Out: ${_formatLocalTime(context, b.breakOutTime)}',
+                                            'Break Out: ${_formatIstTime(context, b.breakOutTime)}',
                                             style:
                                                 kDescriptionTextStyle(
                                                   context,
