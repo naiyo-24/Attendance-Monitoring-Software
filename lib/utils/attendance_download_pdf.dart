@@ -38,7 +38,7 @@ class _DownloadSheetState extends State<DownloadSheet> {
     final totalMinutes = duration.inMinutes;
     final hours = totalMinutes ~/ 60;
     final minutes = totalMinutes % 60;
-    return '${hours} hr ${minutes} mins';
+    return '$hours hr $minutes mins';
   }
 
   PdfColor _pdfColorFromHex(int rgb) {
