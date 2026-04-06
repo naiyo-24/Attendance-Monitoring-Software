@@ -47,6 +47,12 @@ class _CurrentLocationMapScreenState
     return null;
   }
 
+  String _employeeDropdownLabel(Employee employee) {
+    final designation = employee.designation.trim();
+    if (designation.isEmpty) return employee.name;
+    return '${employee.name} • $designation';
+  }
+
   Widget _glassSection({required Widget child}) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(24),
@@ -308,7 +314,7 @@ class _CurrentLocationMapScreenState
                                     (e) => DropdownMenuItem(
                                       value: e.employeeId,
                                       child: Text(
-                                        '${e.name} (${e.designation})',
+                                        _employeeDropdownLabel(e),
                                         overflow: TextOverflow.ellipsis,
                                         style: kCaptionTextStyle(context)
                                             .copyWith(
