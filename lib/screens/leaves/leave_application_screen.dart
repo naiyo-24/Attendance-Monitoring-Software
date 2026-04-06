@@ -11,112 +11,238 @@ import '../../models/leaves.dart';
 import '../../models/employee.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/side_nav_bar.dart';
-
+import '../../widgets/loader.dart';
+import 'dart:ui';
 
 class LeaveApplicationScreen extends ConsumerStatefulWidget {
   const LeaveApplicationScreen({super.key});
 
   @override
-  ConsumerState<LeaveApplicationScreen> createState() => _LeaveApplicationScreenState();
+  ConsumerState<LeaveApplicationScreen> createState() =>
+      _LeaveApplicationScreenState();
 }
-class _LeaveApplicationScreenState extends ConsumerState<LeaveApplicationScreen> {
-	late LeavesNotifier leavesNotifier;
-	List<Leave> filteredLeaves = [];
 
-	@override
-	void initState() {
-		super.initState();
-		leavesNotifier = LeavesNotifier();
-		_fetchAllLeavesForAdmin();
-	}
+class _LeaveApplicationScreenState
+    extends ConsumerState<LeaveApplicationScreen> {
+  late LeavesNotifier leavesNotifier;
+  List<Leave> _allLeaves = [];
+  String _search = '';
+  DateTime? _filterDate;
+  LeaveStatus? _filterStatus;
+  bool _isLoading = false;
+  String? _error;
 
-	Future<void> _fetchAllLeavesForAdmin() async {
-		// Get current adminId from provider
-		final container = ProviderContainer();
-		final authNotifier = container.read(authProvider);
-		final employeeNotifier = container.read(employeeNotifierProvider);
-		if (authNotifier.user?.adminId != null) {
-			await employeeNotifier.fetchEmployees(authNotifier.user!.adminId!);
-			List<Leave> allLeaves = [];
-			for (final emp in employeeNotifier.employees) {
-				await leavesNotifier.fetchLeavesByAdminAndEmployee(adminId: authNotifier.user!.adminId!, employee: emp);
-				allLeaves.addAll(leavesNotifier.leaves);
-			}
-			setState(() {
-				leavesNotifier.setLeaves(allLeaves);
-				filteredLeaves = allLeaves;
-			});
-		}
-	}
+  Widget _glassSection({required Widget child}) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(24),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: kWhite.withAlpha(190),
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(
+              color: kBlack.withAlpha((0.06 * 255).toInt()),
+              width: 1.2,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: kBlack.withAlpha((0.05 * 255).toInt()),
+                blurRadius: 28,
+                offset: const Offset(0, 14),
+              ),
+            ],
+          ),
+          child: Padding(padding: const EdgeInsets.all(14), child: child),
+        ),
+      ),
+    );
+  }
 
-	void _filterLeaves(String search, DateTime? date, Employee? employee) async {
-		final authNotifier = ref.read(authProvider);
-		if (employee != null) {
-			// Fetch leaves for the selected employee from backend
-			await leavesNotifier.fetchLeavesByAdminAndEmployee(
-				adminId: authNotifier.user!.adminId!,
-				employee: employee,
-			);
-			setState(() {
-				filteredLeaves = leavesNotifier.leaves.where((leave) {
-					final matchesSearch = search.isEmpty ||
-						leave.reason.toLowerCase().contains(search.toLowerCase()) ||
-						leave.employee.phone.contains(search);
-					final matchesDate = date == null ||
-						(leave.date.year == date.year && leave.date.month == date.month && leave.date.day == date.day);
-					return matchesSearch && matchesDate;
-				}).toList();
-			});
-		} else {
-			// Optionally, fetch all leaves for all employees (or keep as is)
-			setState(() {
-				filteredLeaves = leavesNotifier.leaves.where((leave) {
-					final matchesSearch = search.isEmpty ||
-						leave.reason.toLowerCase().contains(search.toLowerCase()) ||
-						leave.employee.phone.contains(search);
-					final matchesDate = date == null ||
-						(leave.date.year == date.year && leave.date.month == date.month && leave.date.day == date.day);
-					return matchesSearch && matchesDate;
-				}).toList();
-			});
-		}
-	}
+  @override
+  void initState() {
+    super.initState();
+    leavesNotifier = LeavesNotifier();
+    _fetchAllLeavesForAdmin();
+  }
 
-	@override
-	Widget build(BuildContext context) {
-		// Use Riverpod for employee list in LeaveSearchFilterCard
-		return LeavesProvider(
-			notifier: leavesNotifier,
-			child: Scaffold(
-				appBar: const PremiumAppBar(
-					title: 'Leave Applications',
-					subtitle: 'Manage employee leave requests',
-				),
-				drawer:  SideNavBar(adminUser: ref.watch(authProvider).user!),
-				body: Padding(
-					padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-					child: Column(
-						crossAxisAlignment: CrossAxisAlignment.start,
-						children: [
-							LeaveSearchFilterCard(onFilter: _filterLeaves),
-							const SizedBox(height: 16),
-							Expanded(
-								child: filteredLeaves.isEmpty
-										? Center(child: Text('No leave requests found.', style: kDescriptionTextStyle(context)))
-										: ListView.builder(
-												itemCount: filteredLeaves.length,
-												itemBuilder: (context, idx) {
-													final leave = filteredLeaves[idx];
-													return LeaveRequestCard(
-														leave: leave,
-													);
-												},
-											),
-							),
-						],
-					),
-				),
-			),
-		);
-	}
+  Future<void> _fetchAllLeavesForAdmin() async {
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
+
+    try {
+      final authNotifier = ref.read(authProvider);
+      final employeeNotifier = ref.read(employeeNotifierProvider);
+      final adminId = authNotifier.user?.adminId;
+      if (adminId == null) {
+        setState(() {
+          _error = 'Admin not found. Please login again.';
+          _isLoading = false;
+        });
+        return;
+      }
+
+      await employeeNotifier.fetchEmployees(adminId);
+      final allLeaves = <Leave>[];
+      for (final emp in employeeNotifier.employees) {
+        await leavesNotifier.fetchLeavesByAdminAndEmployee(
+          adminId: adminId,
+          employee: emp,
+        );
+        allLeaves.addAll(leavesNotifier.leaves);
+      }
+
+      _allLeaves = allLeaves;
+      leavesNotifier.setLeaves(allLeaves);
+      setState(() => _isLoading = false);
+    } catch (e) {
+      setState(() {
+        _error = e.toString();
+        _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _filterLeaves(
+    String search,
+    DateTime? date,
+    Employee? employee,
+    LeaveStatus? status,
+  ) async {
+    setState(() {
+      _search = search;
+      _filterDate = date;
+      _filterStatus = status;
+    });
+
+    final authNotifier = ref.read(authProvider);
+    final adminId = authNotifier.user?.adminId;
+    if (adminId == null) return;
+
+    if (employee == null) {
+      leavesNotifier.setLeaves(_allLeaves);
+      return;
+    }
+
+    setState(() => _isLoading = true);
+    try {
+      await leavesNotifier.fetchLeavesByAdminAndEmployee(
+        adminId: adminId,
+        employee: employee,
+      );
+    } catch (e) {
+      setState(() => _error = e.toString());
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final adminUser = ref.watch(authProvider).user;
+    // Use Riverpod for employee list in LeaveSearchFilterCard
+    return LeavesProvider(
+      notifier: leavesNotifier,
+      child: Scaffold(
+        appBar: const PremiumAppBar(
+          title: 'Leave Applications',
+          subtitle: 'Manage employee leave requests',
+        ),
+        drawer: adminUser == null ? null : SideNavBar(adminUser: adminUser),
+        body: Container(
+          width: double.infinity,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [kWhite, kWhiteGrey],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(18, 10, 18, 18),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _glassSection(
+                    child: LeaveSearchFilterCard(onFilter: _filterLeaves),
+                  ),
+                  const SizedBox(height: 14),
+                  Expanded(
+                    child: _isLoading
+                        ? const AttendX24Loader(text: 'Loading leave requests…')
+                        : _error != null
+                        ? Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(14),
+                              child: Text(
+                                _error!,
+                                textAlign: TextAlign.center,
+                                style: kCaptionTextStyle(context).copyWith(
+                                  color: kerror,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                            ),
+                          )
+                        : AnimatedBuilder(
+                            animation: leavesNotifier,
+                            builder: (context, _) {
+                              final visibleLeaves = leavesNotifier.leaves.where(
+                                (leave) {
+                                  final matchesSearch =
+                                      _search.isEmpty ||
+                                      leave.reason.toLowerCase().contains(
+                                        _search.toLowerCase(),
+                                      ) ||
+                                      leave.employee.phone.contains(_search);
+                                  final matchesDate =
+                                      _filterDate == null ||
+                                      (leave.date.year == _filterDate!.year &&
+                                          leave.date.month ==
+                                              _filterDate!.month &&
+                                          leave.date.day == _filterDate!.day);
+                                  final matchesStatus =
+                                      _filterStatus == null ||
+                                      leave.status == _filterStatus;
+                                  return matchesSearch &&
+                                      matchesDate &&
+                                      matchesStatus;
+                                },
+                              ).toList();
+
+                              if (visibleLeaves.isEmpty) {
+                                return Center(
+                                  child: Text(
+                                    'No leave requests found.',
+                                    style: kDescriptionTextStyle(context)
+                                        .copyWith(
+                                          color: kBrown,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                  ),
+                                );
+                              }
+
+                              return ListView.builder(
+                                itemCount: visibleLeaves.length,
+                                itemBuilder: (context, idx) {
+                                  final leave = visibleLeaves[idx];
+                                  return LeaveRequestCard(leave: leave);
+                                },
+                              );
+                            },
+                          ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
