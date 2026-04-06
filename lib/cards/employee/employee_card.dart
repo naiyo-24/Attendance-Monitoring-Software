@@ -18,27 +18,39 @@ class EmployeeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
-        color: kWhite.withAlpha(70),
-        boxShadow: [
-          BoxShadow(
-            color: kBrown.withAlpha(7),
-            blurRadius: 24,
-            offset: const Offset(0, 8),
+    final name = (employee['name'] ?? '').toString();
+    final designation = (employee['designation'] ?? '-').toString();
+    final phone = (employee['phone'] ?? '-').toString();
+    final profilePhoto = employee['profilePhoto']?.toString();
+
+    final photoUrl = (profilePhoto == null || profilePhoto.trim().isEmpty)
+        ? null
+        : (profilePhoto.startsWith('http')
+              ? profilePhoto
+              : baseUrl +
+                    (profilePhoto.startsWith('/')
+                        ? profilePhoto
+                        : '/$profilePhoto'));
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(28),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(28),
+            color: kWhite.withAlpha(78),
+            border: Border.all(color: kWhiteGrey, width: 1.5),
+            boxShadow: [
+              BoxShadow(
+                color: kBlack.withAlpha((0.05 * 255).toInt()),
+                blurRadius: 28,
+                offset: const Offset(0, 14),
+              ),
+            ],
           ),
-        ],
-        border: Border.all(color: kWhiteGrey, width: 1.5),
-        // Glassmorphism effect
-        backgroundBlendMode: BlendMode.overlay,
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(24),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 22),
+            padding: const EdgeInsets.fromLTRB(22, 20, 22, 18),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -48,54 +60,85 @@ class EmployeeCard extends StatelessWidget {
                     Container(
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        gradient: LinearGradient(
+                        gradient: const LinearGradient(
                           colors: [kWhiteGrey, kWhite],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: kBrown.withAlpha(8),
-                            blurRadius: 12,
-                            offset: const Offset(0, 4),
+                            color: kBlack.withAlpha((0.06 * 255).toInt()),
+                            blurRadius: 14,
+                            offset: const Offset(0, 6),
                           ),
                         ],
                       ),
                       child: CircleAvatar(
                         radius: 32,
                         backgroundColor: Colors.transparent,
-                        backgroundImage: employee['profilePhoto'] != null
-                            ? NetworkImage(
-                                employee['profilePhoto'].toString().startsWith('http')
-                                    ? employee['profilePhoto']
-                                    : baseUrl + (employee['profilePhoto'].toString().startsWith('/') ? employee['profilePhoto'] : '/${employee['profilePhoto']}')
-                              )
+                        backgroundImage: photoUrl != null
+                            ? NetworkImage(photoUrl)
                             : null,
-                        child: employee['profilePhoto'] == null
-                            ? const Icon(Iconsax.user, color: kBrown, size: 36)
+                        child: photoUrl == null
+                            ? Text(
+                                name.isNotEmpty
+                                    ? name.characters.first.toUpperCase()
+                                    : '?',
+                                style: kHeaderTextStyle(
+                                  context,
+                                ).copyWith(fontSize: 20, color: kBlack),
+                              )
                             : null,
                       ),
                     ),
-                    const SizedBox(width: 22),
+                    const SizedBox(width: 16),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            employee['name'] ?? '',
-                            style: kHeaderTextStyle(context).copyWith(fontSize: 22, color: kBrown),
+                            name,
+                            style: kHeaderTextStyle(context).copyWith(
+                              fontSize: 20,
+                              color: kBlack,
+                              letterSpacing: 0.2,
+                            ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 6),
+                          Row(
+                            children: [
+                              Icon(Iconsax.user_tag, color: kBrown, size: 16),
+                              const SizedBox(width: 6),
+                              Flexible(
+                                child: Text(
+                                  designation,
+                                  style: kTaglineTextStyle(context).copyWith(
+                                    fontSize: 15,
+                                    color: kBrown,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
                           ),
                           const SizedBox(height: 4),
                           Row(
                             children: [
-                              Icon(Iconsax.user_tag, color: kGreen, size: 18),
+                              Icon(Iconsax.call, color: kGreen, size: 16),
                               const SizedBox(width: 6),
                               Flexible(
                                 child: Text(
-                                  employee['designation'] ?? '-',
-                                  style: kTaglineTextStyle(context).copyWith(fontSize: 16),
+                                  phone,
+                                  style: kDescriptionTextStyle(context)
+                                      .copyWith(
+                                        color: kBrown,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -105,41 +148,113 @@ class EmployeeCard extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const SizedBox(width: 8),
-                    Material(
-                      color: Colors.transparent,
-                      child: Row(
-                        children: [
-                          IconButton(
-                            icon: const Icon(Iconsax.edit_2, color: kGreen, size: 26),
-                            onPressed: onEdit,
-                            tooltip: 'Edit',
-                            splashRadius: 24,
-                          ),
-                          IconButton(
-                            icon: const Icon(Iconsax.trash, color: kPink, size: 26),
-                            onPressed: onDelete,
-                            tooltip: 'Delete',
-                            splashRadius: 24,
-                          ),
-                        ],
-                      ),
+                    const SizedBox(width: 10),
+                    Row(
+                      children: [
+                        _pillIconButton(
+                          context,
+                          icon: Iconsax.edit_2,
+                          tooltip: 'Edit',
+                          foreground: kGreen,
+                          onTap: onEdit,
+                        ),
+                        const SizedBox(width: 10),
+                        _pillIconButton(
+                          context,
+                          icon: Iconsax.trash,
+                          tooltip: 'Delete',
+                          foreground: kerror,
+                          onTap: onDelete,
+                        ),
+                      ],
                     ),
                   ],
                 ),
-                const SizedBox(height: 18),
-                Wrap(
-                  runSpacing: 8,
-                  children: [
-                    _infoRow(context, Iconsax.call, 'Phone', employee['phone']),
-                    _infoRow(context, Iconsax.sms, 'Email', employee['email']),
-                    _infoRow(context, Iconsax.key, 'Password', employee['password']),
-                    _infoRow(context, Iconsax.bank, 'Bank Name', employee['bankName']),
-                    _infoRow(context, Iconsax.building_3, 'Branch Name', employee['branchName']),
-                    _infoRow(context, Iconsax.card, 'Account No.', employee['accountNo']),
-                    _infoRow(context, Iconsax.code, 'IFSC Code', employee['ifsc']),
-                    _infoRow(context, Iconsax.location, 'Address', employee['address']),
-                  ],
+                const SizedBox(height: 14),
+                Container(
+                  height: 1,
+                  width: double.infinity,
+                  color: kBlack.withAlpha((0.05 * 255).toInt()),
+                ),
+                const SizedBox(height: 12),
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    final isWide = constraints.maxWidth >= 520;
+                    final spacing = 10.0;
+                    final fieldWidth = isWide
+                        ? (constraints.maxWidth - spacing) / 2
+                        : constraints.maxWidth;
+
+                    return Wrap(
+                      spacing: spacing,
+                      runSpacing: 10,
+                      children: [
+                        SizedBox(
+                          width: fieldWidth,
+                          child: _infoRow(
+                            context,
+                            Iconsax.sms,
+                            'Email',
+                            employee['email'],
+                          ),
+                        ),
+                        SizedBox(
+                          width: fieldWidth,
+                          child: _infoRow(
+                            context,
+                            Iconsax.key,
+                            'Password',
+                            employee['password'],
+                          ),
+                        ),
+                        SizedBox(
+                          width: fieldWidth,
+                          child: _infoRow(
+                            context,
+                            Iconsax.bank,
+                            'Bank Name',
+                            employee['bankName'],
+                          ),
+                        ),
+                        SizedBox(
+                          width: fieldWidth,
+                          child: _infoRow(
+                            context,
+                            Iconsax.building_3,
+                            'Branch Name',
+                            employee['branchName'],
+                          ),
+                        ),
+                        SizedBox(
+                          width: fieldWidth,
+                          child: _infoRow(
+                            context,
+                            Iconsax.card,
+                            'Account No.',
+                            employee['accountNo'],
+                          ),
+                        ),
+                        SizedBox(
+                          width: fieldWidth,
+                          child: _infoRow(
+                            context,
+                            Iconsax.code,
+                            'IFSC Code',
+                            employee['ifsc'],
+                          ),
+                        ),
+                        SizedBox(
+                          width: constraints.maxWidth,
+                          child: _infoRow(
+                            context,
+                            Iconsax.location,
+                            'Address',
+                            employee['address'],
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ],
             ),
@@ -149,19 +264,71 @@ class EmployeeCard extends StatelessWidget {
     );
   }
 
-  Widget _infoRow(BuildContext context, IconData icon, String label, String? value) {
+  Widget _pillIconButton(
+    BuildContext context, {
+    required IconData icon,
+    required String tooltip,
+    required Color foreground,
+    required VoidCallback onTap,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Tooltip(
+          message: tooltip,
+          child: Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: kWhiteGrey.withAlpha(150),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: kBlack.withAlpha((0.04 * 255).toInt())),
+            ),
+            child: Icon(icon, color: foreground, size: 22),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _infoRow(
+    BuildContext context,
+    IconData icon,
+    String label,
+    dynamic value,
+  ) {
+    final valueText = (value == null || value.toString().trim().isEmpty)
+        ? '-'
+        : value.toString();
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Icon(icon, color: kBrown, size: 18),
-          const SizedBox(width: 8),
-          SizedBox(width: 110, child: Text(label, style: kTaglineTextStyle(context).copyWith(fontSize: 15))),
+          const SizedBox(width: 10),
+          SizedBox(
+            width: 112,
+            child: Text(
+              label,
+              style: kCaptionTextStyle(context).copyWith(
+                fontSize: 13,
+                color: kBrown,
+                fontWeight: FontWeight.w700,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
           Expanded(
             child: Text(
-              value ?? '-',
-              style: kDescriptionTextStyle(context).copyWith(fontSize: 15),
+              valueText,
+              style: kDescriptionTextStyle(context).copyWith(
+                fontSize: 14,
+                color: kBlack,
+                fontWeight: FontWeight.w500,
+              ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
