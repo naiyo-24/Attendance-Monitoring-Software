@@ -11,6 +11,7 @@ import '../../notifiers/holiday_notifier.dart';
 import '../../models/holiday.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../widgets/loader.dart';
+import '../../utils/holiday_list_download_pdf.dart';
 
 class HolidayScreen extends ConsumerStatefulWidget {
   const HolidayScreen({super.key});
@@ -24,6 +25,7 @@ class _HolidayScreenState extends ConsumerState<HolidayScreen> {
   DateTime? _selectedDay;
   HolidayNotifier? _holidayNotifier;
   bool _initialized = false;
+  bool _isDownloadingPdf = false;
 
   Widget _glassSection({required Widget child}) {
     return ClipRRect(
@@ -172,26 +174,94 @@ class _HolidayScreenState extends ConsumerState<HolidayScreen> {
                               ),
                             ),
                           ),
-                          OutlinedButton.icon(
-                            icon: const Icon(Icons.add, size: 20),
-                            label: const Text('Create'),
-                            style: OutlinedButton.styleFrom(
-                              foregroundColor: kBrown,
-                              side: BorderSide(
-                                color: kBrown.withAlpha((0.16 * 255).toInt()),
+                          Wrap(
+                            spacing: 10,
+                            runSpacing: 10,
+                            children: [
+                              OutlinedButton.icon(
+                                icon: const Icon(
+                                  Icons.picture_as_pdf,
+                                  size: 20,
+                                ),
+                                label: Text(
+                                  _isDownloadingPdf ? 'Preparing…' : 'Download',
+                                ),
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: kGreen,
+                                  side: BorderSide(
+                                    color: kGreen.withAlpha(
+                                      (0.22 * 255).toInt(),
+                                    ),
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 12,
+                                  ),
+                                  textStyle: kCaptionTextStyle(
+                                    context,
+                                  ).copyWith(fontWeight: FontWeight.w900),
+                                ),
+                                onPressed:
+                                    (_isDownloadingPdf ||
+                                        _holidayNotifier!.isLoading ||
+                                        _holidayNotifier!.error != null ||
+                                        holidays.isEmpty)
+                                    ? null
+                                    : () async {
+                                        setState(
+                                          () => _isDownloadingPdf = true,
+                                        );
+                                        try {
+                                          await openHolidayListPdfPrintPreview(
+                                            holidays: holidays,
+                                          );
+                                        } catch (_) {
+                                          if (!context.mounted) return;
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            const SnackBar(
+                                              content: Text(
+                                                'Failed to generate holiday PDF.',
+                                              ),
+                                            ),
+                                          );
+                                        } finally {
+                                          if (mounted) {
+                                            setState(
+                                              () => _isDownloadingPdf = false,
+                                            );
+                                          }
+                                        }
+                                      },
                               ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
+                              OutlinedButton.icon(
+                                icon: const Icon(Icons.add, size: 20),
+                                label: const Text('Create'),
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: kBrown,
+                                  side: BorderSide(
+                                    color: kBrown.withAlpha(
+                                      (0.16 * 255).toInt(),
+                                    ),
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 12,
+                                  ),
+                                  textStyle: kCaptionTextStyle(
+                                    context,
+                                  ).copyWith(fontWeight: FontWeight.w900),
+                                ),
+                                onPressed: _openCreateEditHoliday,
                               ),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 12,
-                              ),
-                              textStyle: kCaptionTextStyle(
-                                context,
-                              ).copyWith(fontWeight: FontWeight.w900),
-                            ),
-                            onPressed: _openCreateEditHoliday,
+                            ],
                           ),
                         ],
                       ),
