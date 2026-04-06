@@ -12,6 +12,7 @@ import '../../models/employee.dart';
 import '../../theme/app_theme.dart';
 import '../../utils/employee_download_pdf.dart';
 import '../../widgets/app_bar.dart';
+import '../../widgets/loader.dart';
 import '../../widgets/side_nav_bar.dart';
 
 class EmployeeScreen extends ConsumerStatefulWidget {
@@ -348,7 +349,7 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
                 if (notifier.isLoading)
                   const SliverFillRemaining(
                     hasScrollBody: false,
-                    child: Center(child: CircularProgressIndicator()),
+                    child: AttendX24Loader(),
                   )
                 else if (notifier.error != null)
                   SliverFillRemaining(
