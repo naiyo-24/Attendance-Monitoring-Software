@@ -89,7 +89,7 @@ class _AddEditEmployeeCardState extends State<AddEditEmployeeCard> {
             maxHeight: MediaQuery.of(context).size.height * 0.92,
           ),
           decoration: BoxDecoration(
-            color: kWhite.withAlpha(96),
+            color: kWhite,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
             boxShadow: [
               BoxShadow(

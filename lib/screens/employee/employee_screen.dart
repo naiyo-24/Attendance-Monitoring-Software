@@ -176,8 +176,7 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
                               SizedBox(
                                 width: double.infinity,
                                 child: ElevatedButton.icon(
-                                  style:
-                                      kPremiumButtonStyle(context).copyWith(
+                                  style: kPremiumButtonStyle(context).copyWith(
                                     backgroundColor: WidgetStateProperty.all(
                                       kGreen,
                                     ),
@@ -188,20 +187,17 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
                                       const EdgeInsets.symmetric(vertical: 18),
                                     ),
                                     textStyle: WidgetStateProperty.all(
-                                      kHeaderTextStyle(context).copyWith(
-                                        fontSize: 18,
-                                        color: kWhite,
-                                      ),
+                                      kHeaderTextStyle(
+                                        context,
+                                      ).copyWith(fontSize: 18, color: kWhite),
                                     ),
                                     elevation: WidgetStateProperty.all(10),
                                     shadowColor: WidgetStateProperty.all(
                                       kBlack.withAlpha(40),
                                     ),
                                   ),
-                                  icon:
-                                      const Icon(Iconsax.user_add, size: 24),
-                                  label:
-                                      const Text('Onboard a New Employee'),
+                                  icon: const Icon(Iconsax.user_add, size: 24),
+                                  label: const Text('Onboard a New Employee'),
                                   onPressed: () => _openAddEditEmployee(),
                                 ),
                               ),
@@ -216,32 +212,35 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
                                           color: kBrown,
                                         ),
                                         hintText: 'Search by name or phone no.',
-                                        hintStyle:
-                                            kCaptionTextStyle(context).copyWith(
-                                          color: kBrown.withAlpha(
-                                            (0.75 * 255).toInt(),
-                                          ),
-                                        ),
+                                        hintStyle: kCaptionTextStyle(context)
+                                            .copyWith(
+                                              color: kBrown.withAlpha(
+                                                (0.75 * 255).toInt(),
+                                              ),
+                                            ),
                                         filled: true,
                                         fillColor: kWhiteGrey.withAlpha(140),
                                         contentPadding:
                                             const EdgeInsets.symmetric(
-                                          vertical: 16,
-                                          horizontal: 16,
-                                        ),
+                                              vertical: 16,
+                                              horizontal: 16,
+                                            ),
                                         border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(22),
+                                          borderRadius: BorderRadius.circular(
+                                            22,
+                                          ),
                                           borderSide: BorderSide.none,
                                         ),
                                         enabledBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(22),
+                                          borderRadius: BorderRadius.circular(
+                                            22,
+                                          ),
                                           borderSide: BorderSide.none,
                                         ),
                                         focusedBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(22),
+                                          borderRadius: BorderRadius.circular(
+                                            22,
+                                          ),
                                           borderSide: BorderSide(
                                             color: kBlack.withAlpha(40),
                                             width: 1.5,
@@ -250,10 +249,10 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
                                       ),
                                       style: kDescriptionTextStyle(context)
                                           .copyWith(
-                                        fontSize: 16,
-                                        color: kBlack,
-                                        fontWeight: FontWeight.w500,
-                                      ),
+                                            fontSize: 16,
+                                            color: kBlack,
+                                            fontWeight: FontWeight.w500,
+                                          ),
                                       onChanged: (val) =>
                                           setState(() => searchQuery = val),
                                     ),
@@ -265,8 +264,8 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
                                       onTap: employees.isEmpty
                                           ? null
                                           : () => _downloadEmployeeRecords(
-                                                employees,
-                                              ),
+                                              employees,
+                                            ),
                                       borderRadius: BorderRadius.circular(22),
                                       child: Container(
                                         padding: const EdgeInsets.symmetric(
@@ -275,8 +274,9 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
                                         ),
                                         decoration: BoxDecoration(
                                           color: kWhiteGrey.withAlpha(160),
-                                          borderRadius:
-                                              BorderRadius.circular(22),
+                                          borderRadius: BorderRadius.circular(
+                                            22,
+                                          ),
                                           border: Border.all(
                                             color: kBlack.withAlpha(
                                               (0.06 * 255).toInt(),
@@ -309,14 +309,14 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
                                               'Download',
                                               style: kCaptionTextStyle(context)
                                                   .copyWith(
-                                                color: employees.isEmpty
-                                                    ? kBrown.withAlpha(
-                                                        (0.35 * 255)
-                                                            .toInt(),
-                                                      )
-                                                    : kBlack,
-                                                fontWeight: FontWeight.w800,
-                                              ),
+                                                    color: employees.isEmpty
+                                                        ? kBrown.withAlpha(
+                                                            (0.35 * 255)
+                                                                .toInt(),
+                                                          )
+                                                        : kBlack,
+                                                    fontWeight: FontWeight.w800,
+                                                  ),
                                             ),
                                           ],
                                         ),
@@ -356,8 +356,9 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
                     child: Center(
                       child: Text(
                         notifier.error!,
-                        style: kDescriptionTextStyle(context)
-                            .copyWith(color: kerror),
+                        style: kDescriptionTextStyle(
+                          context,
+                        ).copyWith(color: kerror),
                       ),
                     ),
                   )
@@ -369,15 +370,16 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
                         employees.isEmpty
                             ? 'No employees found.'
                             : 'No matches found.',
-                        style: kDescriptionTextStyle(context)
-                            .copyWith(color: kBrown),
+                        style: kDescriptionTextStyle(
+                          context,
+                        ).copyWith(color: kBrown),
                       ),
                     ),
                   )
                 else
                   SliverList.separated(
                     itemCount: filteredEmployees.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 16),
+                    separatorBuilder: (_, _) => const SizedBox(height: 16),
                     itemBuilder: (context, index) => EmployeeCard(
                       employee: {
                         'name': filteredEmployees[index].name,
