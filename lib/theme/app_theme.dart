@@ -25,11 +25,11 @@ class Responsive {
 // Color palette (updated)
 const Color kBlack = Colors.black;
 const Color kBrown = Color(0xFF554E3E); // new brown shade
-const Color kGreen = Color.fromARGB(255, 0, 0, 0); // new green shade
-const Color kPink = Color.fromARGB(255, 129, 128, 128); // new pink shade
+const Color kGreen = Color(0xFF12A30D); // new green shade
+const Color kPink = Color(0xFF818080); // new pink shade
 const Color kWhite = Colors.white;
 const Color kWhiteGrey = Color(0xFFF5F5F7); // keep for backgrounds if needed
-const Color kerror = Color.fromARGB(255, 186, 14, 14); // Error Color
+const Color kerror = Color(0xFFBA0E0E); // Error Color
 
 // Extreme minimum screen padding for modern Android smartphones
 const double kScreenPadding = 8.0;
